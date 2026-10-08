@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Oya
 
-## Getting Started
+The AI agent for everyday life. Starting in Nigeria, built for everywhere.
 
-First, run the development server:
+The product and technical specification is [`SPEC.md`](SPEC.md). Build progress is in
+[`docs/milestones.md`](docs/milestones.md), choices the spec doesn't cover are in
+[`docs/decisions.md`](docs/decisions.md), and open divergences are in [`docs/spec-questions.md`](docs/spec-questions.md).
+
+## Setup
+
+Requirements: Node.js 22+, pnpm 11 (`npm i -g pnpm`), and the Supabase CLI via `npx supabase` (log in with
+`npx supabase login`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env    # then fill in the Supabase values
+pnpm dev                # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Useful pages while developing:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/` the landing page
+- `/style` brand tokens, type scale and components
+- `/help/emergency` the static emergency page
+- `/api/health` app and database health
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| Command                                        | What it does                                                    |
+| ---------------------------------------------- | --------------------------------------------------------------- |
+| `pnpm dev` / `pnpm build` / `pnpm start`       | Next.js                                                         |
+| `pnpm lint` / `pnpm typecheck` / `pnpm format` | Code quality                                                    |
+| `pnpm test` / `pnpm test:coverage`             | Unit tests (Vitest)                                             |
+| `pnpm check:grants`                            | Fails any migration missing RLS or explicit grants (SPEC §12.1) |
+| `pnpm db:push`                                 | Apply new migrations to the linked Supabase project             |
+| `pnpm db:types`                                | Regenerate `src/types/db.ts` from the database                  |
 
-To learn more about Next.js, take a look at the following resources:
+## Layout
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/app          routes: (marketing) landing, /help/emergency, /style, /api/*
+src/server       server-only code: env, db clients, flags, actions, safety
+src/components   ui (restyled Radix/shadcn), marketing
+src/lib          money, phone, time, utils, marketing data
+src/i18n         next-intl config and en / pcm catalogues
+config           brand tokens, emergency resources
+supabase         migrations
+scripts          check-migration-grants
+docs             decisions, spec questions, milestones
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Rules worth knowing before you write code
 
-## Deploy on Vercel
+From SPEC §0.1, the short version:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Money is integer kobo (`bigint`), never floats. Use `src/lib/money.ts`.
+- Every new table needs RLS, policies and explicit `GRANT`s in the same migration; every function needs
+  `revoke execute … from public`. CI enforces this.
+- The service-role client lives in `src/server/db/service-client.ts` and is only used after an ownership check.
+- Features for later phases ship behind `feature_flags`. GATED flags can't be enabled without a `gate_note`.

@@ -1,0 +1,39 @@
+{
+  "$comment": "Emergency and support numbers shown by the EmergencyCard and /help/emergency (SPEC §15.4). Only entries with verified=true are shown. Ops must call each number to confirm it works before setting verified=true and verifiedAt.",
+  "version": 1,
+  "resources": [
+    {
+      "id": "ng_112",
+      "kind": "emergency",
+      "label": "Emergency services (police, fire, ambulance)",
+      "phone": "112",
+      "tollFree": true,
+      "scope": "NG",
+      "verified": true,
+      "verifiedAt": null,
+      "source": "SPEC §15.4: national emergency number, toll-free on all networks. Re-confirm with a test call before launch."
+    },
+    {
+      "id": "ng_ak_ambulance",
+      "kind": "ambulance",
+      "label": "Akwa Ibom ambulance lines",
+      "phone": null,
+      "tollFree": null,
+      "scope": "NG-AK",
+      "verified": false,
+      "verifiedAt": null,
+      "source": "To be collected and phone-verified by ops during Pilot 0 (SPEC §21.4)."
+    },
+    {
+      "id": "ng_self_harm_support",
+      "kind": "self_harm",
+      "label": "Nigerian mental health and suicide support lines",
+      "phone": null,
+      "tollFree": null,
+      "scope": "NG",
+      "verified": false,
+      "verifiedAt": null,
+      "source": "To be phone-verified by ops before launch (SPEC §15.4)."
+    }
+  ]
+}

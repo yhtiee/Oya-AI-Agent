@@ -1,0 +1,449 @@
+{
+  "$schema": "oya-brand/v1",
+  "brand": {
+    "name": "Oya",
+    "wordmark": {
+      "text": "oya",
+      "case": "lowercase",
+      "font": "Bricolage Grotesque",
+      "weight": 800,
+      "letterSpacing": "-0.025em",
+      "color": "orange"
+    },
+    "tagline": "The AI agent for everyday life",
+    "signoff": "Oya. Sort am.",
+    "mission": "AI has lived on the internet, serving people who work online. Oya brings it into everyday life.",
+    "positioning": "Starting in Nigeria, built for everywhere.",
+    "promise": "Say what you need. Oya sorts it, from start to finish.",
+    "scope": {
+      "rule": "Oya is an agent for every part of daily life. Never present it as a marketplace, shopping app or delivery service.",
+      "jobTypes": [
+        "Know: power supply, prices, fuel availability, local alerts, exam and school dates",
+        "Get things done: government paperwork, admissions, applications, renewals",
+        "Book: services, appointments, travel, outings, events",
+        "Find: jobs, homes, places, people who can help",
+        "Remember and plan: reminders, household admin, multi-step missions like moving city",
+        "Get help: emergencies, repairs, health facilities",
+        "Buy and pay: one job type among many, not the headline"
+      ],
+      "language": "Talk about needs, requests and people who help, not sellers and orders. Show a mix of job types in every hero, demo and example set, with at least half involving no purchase."
+    }
+  },
+
+  "colors": {
+    "forest": {
+      "hex": "#10241B",
+      "role": "Primary dark. Hero and closing backgrounds, headings on light, primary text."
+    },
+    "cream": { "hex": "#FAF6EE", "role": "Primary light background. Text on dark." },
+    "sand": { "hex": "#F1EADC", "role": "Second light background, used to alternate sections. Muted card fills." },
+    "paper": { "hex": "#FFFDF8", "role": "Card surface on cream or sand." },
+    "orange": {
+      "hex": "#F28C28",
+      "role": "Brand accent. Primary buttons, wordmark, statement backgrounds, icon fills, eyebrows on dark. Never as text on light."
+    },
+    "ember": { "hex": "#A84F05", "role": "Orange for text on light backgrounds: eyebrows, numbers, labels." },
+    "leaf": { "hex": "#2E9E6B", "role": "Secondary accent. Success states, icon fills, large numbers, charts." },
+    "deepLeaf": {
+      "hex": "#1D6B47",
+      "role": "Green for text on light backgrounds: 'You get' labels, positive figures, links."
+    },
+    "mint": { "hex": "#DCEFE3", "role": "Soft fill: icon tiles, user chat bubbles, highlight rows." },
+    "peach": { "hex": "#FCE3CB", "role": "Soft fill: alternate icon tiles, badges." },
+    "body": { "hex": "#3D4A43", "role": "Body text on light." },
+    "bodyOnDark": { "hex": "#C5D6CC", "role": "Body text on forest." },
+    "muted": {
+      "hex": "#6B756F",
+      "role": "Footnotes, captions, placeholders. Use at 24px or larger on cream (4.43:1)."
+    },
+    "hairline": { "hex": "#E4DCCB", "role": "Card borders, dividers, timeline rails on light." },
+    "forestCard": { "hex": "#1A3428", "role": "Card surface on forest." },
+    "forestLine": { "hex": "#2C4A3C", "role": "Dividers and dashed rings on forest." },
+    "forestEdge": { "hex": "#3A5A4B", "role": "Outline buttons and pills on forest." },
+    "orangeSoft": { "hex": "#F7B26E", "role": "Tertiary chart colour, secondary bars." },
+    "stone": { "hex": "#B9AE98", "role": "Neutral chart colour, inactive states, cost bars." },
+    "chatBg": { "hex": "#EFE6D6", "role": "Chat screen background in phone mockups." }
+  },
+
+  "contrast": {
+    "note": "WCAG ratios measured on the brand hexes. Normal text needs 4.5:1; large text (24px+, or 18.66px+ bold) and graphics need 3:1.",
+    "pairs": [
+      { "fg": "forest", "bg": "cream", "ratio": 15.1, "use": "any text" },
+      { "fg": "body", "bg": "cream", "ratio": 8.62, "use": "any text" },
+      { "fg": "deepLeaf", "bg": "cream", "ratio": 6.0, "use": "any text" },
+      { "fg": "ember", "bg": "cream", "ratio": 5.15, "use": "any text" },
+      { "fg": "ember", "bg": "sand", "ratio": 4.63, "use": "any text" },
+      { "fg": "muted", "bg": "cream", "ratio": 4.43, "use": "large text only" },
+      { "fg": "leaf", "bg": "cream", "ratio": 3.13, "use": "large text and graphics only" },
+      { "fg": "orange", "bg": "cream", "ratio": 2.28, "use": "fills and graphics only, never text" },
+      { "fg": "cream", "bg": "forest", "ratio": 15.1, "use": "any text" },
+      { "fg": "bodyOnDark", "bg": "forest", "ratio": 10.75, "use": "any text" },
+      { "fg": "orange", "bg": "forest", "ratio": 6.63, "use": "any text" },
+      { "fg": "forest", "bg": "orange", "ratio": 6.63, "use": "any text: buttons and statement sections" },
+      { "fg": "forest", "bg": "mint", "ratio": 13.56, "use": "any text" },
+      { "fg": "forest", "bg": "peach", "ratio": 13.17, "use": "any text" },
+      { "fg": "cream", "bg": "deepLeaf", "ratio": 6.0, "use": "any text" },
+      { "fg": "cream", "bg": "leaf", "ratio": 3.13, "use": "large or bold text only" }
+    ]
+  },
+
+  "typography": {
+    "families": {
+      "display": {
+        "name": "Bricolage Grotesque",
+        "stack": "'Bricolage Grotesque', Arial, sans-serif",
+        "weights": [700, 800],
+        "use": "Headlines, big numbers, card titles, the wordmark.",
+        "googleFonts": "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400..800&display=swap"
+      },
+      "body": {
+        "name": "DM Sans",
+        "stack": "'DM Sans', Arial, sans-serif",
+        "weights": [400, 700],
+        "use": "Body copy, UI, buttons, tables, eyebrows.",
+        "googleFonts": "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..700&display=swap"
+      },
+      "accent": {
+        "name": "Caveat",
+        "stack": "'Caveat', 'Brush Script MT', cursive",
+        "weights": [700],
+        "use": "One handwritten aside per page at most, never body text.",
+        "googleFonts": "https://fonts.googleapis.com/css2?family=Caveat:wght@500..700&display=swap"
+      }
+    },
+    "scale": {
+      "note": "slidePx is what the decks use on a 1920×1080 canvas. web is the recommended responsive equivalent.",
+      "hero": {
+        "slidePx": 120,
+        "web": "clamp(3.25rem, 7vw, 6rem)",
+        "family": "display",
+        "weight": 800,
+        "lineHeight": 1.0,
+        "letterSpacing": "-0.025em"
+      },
+      "statement": {
+        "slidePx": 96,
+        "web": "clamp(2.5rem, 5.5vw, 4.5rem)",
+        "family": "display",
+        "weight": 700,
+        "lineHeight": 1.08,
+        "letterSpacing": "-0.02em"
+      },
+      "h1": {
+        "slidePx": 72,
+        "web": "clamp(2.25rem, 4.5vw, 3.5rem)",
+        "family": "display",
+        "weight": 700,
+        "lineHeight": 1.1,
+        "letterSpacing": "-0.015em"
+      },
+      "h2": {
+        "slidePx": 40,
+        "web": "clamp(1.5rem, 2.5vw, 2rem)",
+        "family": "display",
+        "weight": 700,
+        "lineHeight": 1.15,
+        "letterSpacing": "0"
+      },
+      "h3": {
+        "slidePx": 32,
+        "web": "1.375rem",
+        "family": "display",
+        "weight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "0"
+      },
+      "bodyLarge": {
+        "slidePx": 28,
+        "web": "1.25rem",
+        "family": "body",
+        "weight": 400,
+        "lineHeight": 1.45,
+        "letterSpacing": "0"
+      },
+      "body": {
+        "slidePx": 24,
+        "web": "1.0625rem",
+        "family": "body",
+        "weight": 400,
+        "lineHeight": 1.5,
+        "letterSpacing": "0"
+      },
+      "eyebrow": {
+        "slidePx": 24,
+        "web": "0.8125rem",
+        "family": "body",
+        "weight": 700,
+        "lineHeight": 1.4,
+        "letterSpacing": "0.12em",
+        "textTransform": "uppercase"
+      },
+      "caption": {
+        "slidePx": 24,
+        "web": "0.875rem",
+        "family": "body",
+        "weight": 400,
+        "lineHeight": 1.4,
+        "letterSpacing": "0"
+      },
+      "bigNumber": {
+        "slidePx": 80,
+        "web": "clamp(2.5rem, 5vw, 4rem)",
+        "family": "display",
+        "weight": 800,
+        "lineHeight": 1.0,
+        "letterSpacing": "-0.02em"
+      },
+      "accent": {
+        "slidePx": 48,
+        "web": "clamp(1.75rem, 3vw, 2.5rem)",
+        "family": "accent",
+        "weight": 700,
+        "lineHeight": 1.05,
+        "letterSpacing": "0"
+      }
+    },
+    "rules": [
+      "Eyebrows sit above every section headline: ember on light, orange on forest.",
+      "Emphasise with weight or colour, never a new size.",
+      "Body text columns stay between 55 and 75 characters wide."
+    ]
+  },
+
+  "themes": {
+    "light": {
+      "background": "cream",
+      "backgroundAlt": "sand",
+      "surface": "paper",
+      "border": "hairline",
+      "heading": "forest",
+      "text": "body",
+      "textMuted": "muted",
+      "eyebrow": "ember",
+      "accent": "orange",
+      "accentText": "ember",
+      "positiveText": "deepLeaf"
+    },
+    "dark": {
+      "background": "forest",
+      "surface": "forestCard",
+      "border": "forestLine",
+      "heading": "cream",
+      "text": "bodyOnDark",
+      "textMuted": "bodyOnDark",
+      "eyebrow": "orange",
+      "accent": "orange",
+      "accentText": "orange",
+      "positiveText": "leaf"
+    },
+    "statement": {
+      "background": "orange",
+      "heading": "forest",
+      "text": "forest",
+      "eyebrow": "forest",
+      "use": "Once per page: the one sentence people should remember."
+    },
+    "sectionRhythm": [
+      "dark hero",
+      "cream content",
+      "sand content",
+      "orange statement (once)",
+      "cream or sand content",
+      "dark closing call to action"
+    ]
+  },
+
+  "spacing": {
+    "baseUnit": "4px",
+    "scale": [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128],
+    "sectionPaddingY": { "mobile": "64px", "desktop": "128px" },
+    "pageGutter": { "mobile": "16px", "tablet": "32px", "desktop": "64px" },
+    "contentMaxWidth": "1200px",
+    "cardPadding": { "compact": "24px", "default": "32px", "spacious": "40px" },
+    "gridGap": { "tight": "12px", "default": "24px", "loose": "32px" }
+  },
+
+  "radius": {
+    "pill": "999px",
+    "cardLarge": "28px",
+    "card": "24px",
+    "panel": "20px",
+    "input": "18px",
+    "chip": "16px",
+    "small": "12px",
+    "iconTile": "28% of tile size (34 on a 120 grid)",
+    "phoneFrame": "56px",
+    "phoneScreen": "40px",
+    "browserFrame": "28px"
+  },
+
+  "elevation": {
+    "none": "none",
+    "card": "0 4px 24px rgba(16, 36, 27, 0.06)",
+    "floating": "0 24px 64px rgba(16, 36, 27, 0.14)",
+    "device": "0 24px 64px rgba(16, 36, 27, 0.22)",
+    "rule": "Most surfaces use a 1px hairline border instead of a shadow. Shadows are for device mockups and one hero element."
+  },
+
+  "components": {
+    "buttonPrimary": {
+      "background": "orange",
+      "text": "forest",
+      "weight": 700,
+      "radius": "pill",
+      "padding": "12px 24px"
+    },
+    "buttonSecondary": {
+      "background": "transparent",
+      "text": "forest (cream on dark)",
+      "border": "2px solid hairline (forestEdge on dark)",
+      "radius": "pill",
+      "padding": "10px 24px"
+    },
+    "pill": {
+      "background": "mint or peach",
+      "text": "forest",
+      "weight": 700,
+      "radius": "pill",
+      "padding": "10px 22px"
+    },
+    "card": { "background": "paper", "border": "1px solid hairline", "radius": "cardLarge", "padding": "32px–40px" },
+    "cardOnDark": { "background": "forestCard", "border": "none", "radius": "cardLarge", "padding": "36px" },
+    "statTile": {
+      "number": "bigNumber, deepLeaf or ember, alternating",
+      "label": "bodyLarge bold forest",
+      "source": "caption muted"
+    },
+    "chatBubbleUser": { "background": "mint", "text": "forest", "radius": "24px", "align": "end" },
+    "chatBubbleAgent": { "background": "paper", "text": "forest", "radius": "24px", "align": "start" },
+    "chatAction": {
+      "background": "forest",
+      "text": "cream",
+      "radius": "14px",
+      "use": "Action buttons inside chat: Choose, Confirm, Book, Remind me, Get directions, Pay"
+    },
+    "recommendationCard": {
+      "background": "paper",
+      "border": "1px solid hairline; best match gets 3px solid orange plus a peach 'Best match' badge",
+      "radius": "20px"
+    },
+    "numberedStep": { "dot": "48px circle, orange fill, forest number", "connector": "4px orange arrow between steps" },
+    "timelineRail": {
+      "line": "4px hairline (orange for active journeys)",
+      "node": "72px circle: orange, leaf, deepLeaf, forest in sequence"
+    }
+  },
+
+  "iconography": {
+    "style": "Custom illustrated icons on a 120×120 grid.",
+    "tile": { "shape": "rounded square", "radius": 34, "fills": ["mint", "peach"], "alternate": true },
+    "stroke": { "color": "forest", "width": 5, "linecap": "round", "linejoin": "round" },
+    "fills": ["orange", "leaf", "paper"],
+    "set": [
+      "food",
+      "artisans",
+      "price check",
+      "cooking gas",
+      "pharmacy",
+      "house",
+      "power",
+      "moving",
+      "laundry",
+      "domestic staff",
+      "clinic",
+      "emergency",
+      "tutor",
+      "school",
+      "government runs",
+      "legal",
+      "jobs",
+      "wholesale",
+      "business services",
+      "fuel",
+      "bus",
+      "car",
+      "phone repair",
+      "events/canopy",
+      "beauty",
+      "places",
+      "pets",
+      "farm",
+      "tractor",
+      "alerts",
+      "mic",
+      "spark",
+      "chat",
+      "shield",
+      "track"
+    ],
+    "uiIcons": "For small UI icons use a rounded line set (Lucide or Phosphor) at 2px stroke in forest, or forest on an orange circle chip."
+  },
+
+  "imagery": {
+    "primary": "Illustration and product mockups (phone chat, web app panels), not stock photos.",
+    "photography": "If used later: real people going about everyday life (at home, on the road, at work, in school, out with family), warm natural light, never staged office scenes.",
+    "signatureGraphic": "The hub: Oya's orange chat orb at the centre, everyday-need icons on a dashed orbit ring, on forest."
+  },
+
+  "motion": {
+    "duration": { "fast": "150ms", "base": "250ms", "slow": "450ms" },
+    "easing": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+    "patterns": [
+      "Chat bubbles arrive one by one with a short rise and fade.",
+      "'Watch it work' status lines tick in as the agent checks, asks, books and confirms on the user's behalf.",
+      "Respect prefers-reduced-motion."
+    ]
+  },
+
+  "voice": {
+    "personality": ["warm", "plain-spoken", "confident", "a little playful", "on the user's side"],
+    "do": [
+      "Use short, concrete sentences about real errands.",
+      "Let Pidgin appear in product moments and sign-offs ('Oya. Sort am.', 'Rider don pick am').",
+      "Say what Oya does, not how clever the AI is."
+    ],
+    "dont": [
+      "No jargon like 'leveraging LLMs' or 'synergy'.",
+      "No emoji in brand surfaces.",
+      "Never promise what the agent can't guarantee; the 'Sorted' guarantee is the promise."
+    ]
+  },
+
+  "rules": [
+    "Never use pure #FFFFFF or #000000; use paper/cream and forest.",
+    "Orange is a fill, not a text colour on light backgrounds; use ember for orange text.",
+    "One orange statement section per page.",
+    "At most one gradient per page, and only if it earns its place.",
+    "Colour never carries meaning alone: pair status colours with words.",
+    "Two background tones (cream and sand) plus forest for hero and close."
+  ],
+
+  "cssVariables": {
+    "--oya-forest": "#10241B",
+    "--oya-cream": "#FAF6EE",
+    "--oya-sand": "#F1EADC",
+    "--oya-paper": "#FFFDF8",
+    "--oya-orange": "#F28C28",
+    "--oya-ember": "#A84F05",
+    "--oya-leaf": "#2E9E6B",
+    "--oya-deep-leaf": "#1D6B47",
+    "--oya-mint": "#DCEFE3",
+    "--oya-peach": "#FCE3CB",
+    "--oya-body": "#3D4A43",
+    "--oya-body-on-dark": "#C5D6CC",
+    "--oya-muted": "#6B756F",
+    "--oya-hairline": "#E4DCCB",
+    "--oya-forest-card": "#1A3428",
+    "--oya-forest-line": "#2C4A3C",
+    "--oya-forest-edge": "#3A5A4B",
+    "--oya-orange-soft": "#F7B26E",
+    "--oya-stone": "#B9AE98",
+    "--oya-chat-bg": "#EFE6D6",
+    "--oya-font-display": "'Bricolage Grotesque', Arial, sans-serif",
+    "--oya-font-body": "'DM Sans', Arial, sans-serif",
+    "--oya-font-accent": "'Caveat', 'Brush Script MT', cursive",
+    "--oya-radius-pill": "999px",
+    "--oya-radius-card": "28px",
+    "--oya-shadow-floating": "0 24px 64px rgba(16, 36, 27, 0.14)"
+  }
+}

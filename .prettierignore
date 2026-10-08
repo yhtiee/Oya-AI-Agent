@@ -1,0 +1,11 @@
+.next
+node_modules
+coverage
+pnpm-lock.yaml
+next-env.d.ts
+src/types/db.ts
+supabase/.temp
+supabase/migrations
+assets
+public
+SPEC.md

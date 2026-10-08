@@ -1,0 +1,11 @@
+# Pin exact versions (SPEC §21.1).
+savePrefix: ""
+
+allowBuilds:
+  # Native resolver used by eslint-plugin-import.
+  unrs-resolver: true
+  # Verifies its platform binary; used by tsx and Vitest.
+  esbuild: true
+  # Only used by next-intl's optional message extractor; prebuilt binaries are enough.
+  "@parcel/watcher": false
+  "@swc/core": false

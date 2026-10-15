@@ -59,7 +59,9 @@ export async function createTestUser(label: string): Promise<{ id: string; email
 }
 
 export async function deleteTestUser(id: string | undefined) {
-  if (id) await service.rpc("auth_delete_user", { p_user_id: id, p_deleted_by: null });
+  if (!id) return;
+  await service.rpc("purge_user_data", { p_user_ids: [id] });
+  await service.rpc("auth_delete_user", { p_user_id: id, p_deleted_by: null });
 }
 
 export function requireIntegrationEnv() {

@@ -1,0 +1,6 @@
+# Keep LF in the working copy on every OS, so Prettier and CI agree (Windows core.autocrlf otherwise checks out CRLF).
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.woff binary
+*.woff2 binary

@@ -38,6 +38,9 @@ jobs:
       - name: Migration grants (SPEC §12.1)
         run: pnpm check:grants
 
+      - name: Model routing has passing evals (SPEC §10.1a)
+        run: pnpm check:llm-routing
+
       - name: Format
         run: pnpm format:check
 

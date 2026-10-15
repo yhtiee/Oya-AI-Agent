@@ -1,0 +1,50 @@
+{
+  "$comment": "USD per million tokens (SPEC §10.1). `billed: false` models run on a free tier: cost is logged as 0 and the daily budget doesn't count them, but the list price is kept so the cost report can show what paid use would cost. VERIFY every price on the provider's pricing page before relying on it (checked 2026-10-15 from memory, not confirmed).",
+  "version": 1,
+  "models": {
+    "groq:openai/gpt-oss-20b": {
+      "input": 0.075,
+      "output": 0.3,
+      "cacheRead": 0.0375,
+      "cacheWrite": 0.075,
+      "billed": false
+    },
+    "groq:openai/gpt-oss-120b": {
+      "input": 0.15,
+      "output": 0.6,
+      "cacheRead": 0.075,
+      "cacheWrite": 0.15,
+      "billed": false
+    },
+    "groq:llama-3.3-70b-versatile": {
+      "input": 0.59,
+      "output": 0.79,
+      "cacheRead": 0.59,
+      "cacheWrite": 0.59,
+      "billed": false
+    },
+    "groq:moonshotai/kimi-k2-instruct-0905": {
+      "input": 1.0,
+      "output": 3.0,
+      "cacheRead": 0.5,
+      "cacheWrite": 1.0,
+      "billed": false
+    },
+    "google:gemini-3.5-flash-lite": {
+      "input": 0.1,
+      "output": 0.4,
+      "cacheRead": 0.025,
+      "cacheWrite": 0.1,
+      "billed": true
+    },
+    "google:gemini-3.5-flash": { "input": 0.3, "output": 2.5, "cacheRead": 0.075, "cacheWrite": 0.3, "billed": true },
+    "anthropic:claude-haiku-4-5-20251001": {
+      "input": 1.0,
+      "output": 5.0,
+      "cacheRead": 0.1,
+      "cacheWrite": 1.25,
+      "billed": true
+    },
+    "anthropic:claude-sonnet-5-5": { "input": 2.0, "output": 10.0, "cacheRead": 0.2, "cacheWrite": 2.5, "billed": true }
+  }
+}

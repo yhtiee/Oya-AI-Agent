@@ -124,3 +124,43 @@ Progress against SPEC §21.4. Each milestone ends with tests green, migrations a
   `select vault.create_secret('<the same secret>', 'oya_cron_secret');`
 - Map Uyo power clusters as GeoJSON and import them:
   `pnpm tsx scripts/import-areas.ts clusters.geojson --source ambassadors-2026-11 --dry-run`, then without `--dry-run`.
+
+## M3 — Conversation core and eval harness
+
+**Status:** built, awaiting founder review (2026-10-15). Model provider: Groq free tier (D-019).
+
+| Item                                                                                   | Where                                                         | Status                                  |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------- |
+| Chat UI: sidebar, centred empty state, bubbles, checked-sentence streaming, cards      | `/app`, `src/components/chat/*`, `src/components/app/Sidebar` | done                                    |
+| `/api/chat` (NDJSON stream) and the web pipeline, steps 0–12                           | `src/app/api/chat`, `src/server/agent/pipeline.ts`            | done (D-020 for the gaps)               |
+| Emergency pre-filter in browser and server; offline card; header Emergency button      | `config/emergency-phrases.json`, `src/lib/safety/*`           | done                                    |
+| Router (structured output), safety gate, self-harm supportive flow, PII redaction      | `src/server/agent/router*.ts`, `safety-gate.ts`, `redact.ts`  | done                                    |
+| Skill runner with a stub skill (`paperwork`, KB-only)                                  | `src/server/agent/skill-runner.ts`, `skills/`                 | done (D-022)                            |
+| Tool registry with logging; confirmations (§7.6); Confirm-card taps                    | `src/server/agent/tools/*`, `confirmations.ts`                | done                                    |
+| Cards: `InfoCard`, `ConfirmCard`, `EmergencyCard` (+ `SupportCard`); grounding checker | `src/types/cards.ts`, `cards.ts`, `grounding.ts`              | done                                    |
+| LLM module: routing config, prices, retries, fallback, breaker, cost logging, budgets  | `src/server/integrations/llm/*`, `config/llm-*.json`          | done; Gemini fallback wired, off        |
+| CI rule tying `enabled` / `fallbackEnabled` to eval reports                            | `scripts/check-llm-routing.ts`, CI step                       | done                                    |
+| Ops queue page: filter, take over (agent pauses), hand back                            | `/ops`, `src/server/actions/ops.ts`                           | done                                    |
+| Eval runner and fixtures: 100 router utterances, 110-case safety suite                 | `scripts/eval.ts`, `evals/fixtures/*`                         | done; fixtures are a team draft (D-023) |
+| Service worker: emergency page offline                                                 | `public/sw.js`                                                | done (D-021)                            |
+| Account-data purge (LLM logs, analytics, rate limits, safety events)                   | migration `…_purge_user_data.sql`                             | applied                                 |
+
+### Acceptance (§21.4)
+
+- Router ≥ 90% on the first 100 utterances: see the eval results below.
+- Emergency recall 100%: see the eval results below.
+- [x] Confirmation-integrity suite passes: 22/22 (`tests/integration/confirmation-integrity.test.ts`: double taps,
+      expired, superseded, cross-user ids, tampered payloads, concurrent "yes", retried POSTs).
+- [~] Reply first sentence ≤ 5 s p95 on staging: not measured on staging yet. Locally, against the live database from
+  Nigeria-distance network, a fixed reply takes about 1–2 s and a skill reply about 5 s; most of it is database
+  round trips (each turn makes ~10) plus two model calls.
+- [x] The emergency card shows with the network off (browser test: typing, sending and the header button, offline).
+
+### Founder steps
+
+- Confirm in Groq's terms that API data isn't used for training (D-019).
+- Before launch: a paid model tier; Groq's free tier serves about 3 messages a minute and 1,000 a day.
+- Turn the router and safety classifier on in `config/llm-routing.json` (`"enabled": true`) once you're happy with the
+  eval results; CI refuses it without a passing report. Until then production replies in button mode; set
+  `LLM_ALLOW_UNEVALUATED=true` in Vercel **preview** or local `.env` to try the chat.
+- Ask Pilot 0 ambassadors to write and record the real router and safety fixtures, and to review the emergency phrases.

@@ -140,6 +140,11 @@ body {
   outline-offset: 3px;
 }
 
+/* The chat composer shows focus with its card shadow instead (Chat.tsx); the outline boxed the text awkwardly. */
+.composer-input:focus-visible {
+  outline: none;
+}
+
 /* Motion */
 @keyframes rise {
   from {

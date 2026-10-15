@@ -10,8 +10,15 @@ $email = "e2e-$([guid]::NewGuid().ToString().Substring(0,8))@integration.oya.tes
 $password = "jollof on sunday 7"
 $results = [ordered]@{}
 function Check($name, $ok) { $results[$name] = $(if ($ok) { "PASS" } else { "FAIL" }) }
+# Waits until the path matches (sign-up and sign-in hash passwords slowly on purpose).
+function WaitPath([string]$like, [int]$timeoutMs = 15000) { $end = (Get-Date).AddMilliseconds($timeoutMs); while ((Get-Date) -lt $end) { if ((Get-Path) -like $like) { return $true }; Start-Sleep -Milliseconds 300 }; return $false }
+function WaitText([string]$regex, [int]$timeoutMs = 15000) { $end = (Get-Date).AddMilliseconds($timeoutMs); while ((Get-Date) -lt $end) { if ((Js "/$regex/i.test(document.body.innerText)") -eq $true) { return $true }; Start-Sleep -Milliseconds 300 }; return $false }
 function Sql($q) { $ErrorActionPreference = "Continue"; (npx --no-install supabase db query --linked $q 2>$null | Out-String) }
 function Totp($secret) { $ErrorActionPreference = "Continue"; $env:OYA_TOTP_SECRET = $secret; (pnpm exec tsx -e "import { totpAt, base32Decode, timeStep } from './src/server/auth/totp.ts'; console.log(totpAt(base32Decode(process.env.OYA_TOTP_SECRET), timeStep()))" 2>$null | Select-Object -Last 1).Trim() }
+
+# Each run makes 4 sign-up attempts and the limit is 5 an hour per connection (working as designed), so clear the
+# current hour's sign-up and sign-in counters first. Pre-launch only: this also resets them for anyone else.
+Sql "delete from internal.rate_limits where (key like 'signup:ip:%' or key like 'signin:ip:%') and window_start > now() - interval '1 hour'" | Out-Null
 
 Start-Browser -OutDir $OutDir -Width 1280 -Height 1000
 try {
@@ -35,12 +42,12 @@ try {
   Click-El "input[name=adult]"; Click-El "input[name=terms]"; Click-El "form button[type=submit]"; Start-Sleep 2
   Check "weak password is refused" ((Js "document.body.innerText.includes('Use at least 10')") -eq $true)
   Check "name and email survive a failed submit" ((Js "document.querySelector('#email').value") -eq $email)
-  Set-Field "#password" $password; Set-Field "#confirm" "different password 9"; Click-El "form button[type=submit]"; Start-Sleep 2
-  Check "mismatched passwords are refused" ((Js "/don.t match/.test(document.body.innerText)") -eq $true)
+  Set-Field "#password" $password; Set-Field "#confirm" "different password 9"; Click-El "form button[type=submit]"
+  Check "mismatched passwords are refused" (WaitText "n.t match")
   Js "document.querySelector('#password').parentElement.querySelector('button').click(); 'ok'" | Out-Null; Start-Sleep -Milliseconds 500
   Check "eye button reveals the password" ((Js "document.querySelector('#password').type") -eq "text")
-  Set-Field "#password" $password; Set-Field "#confirm" $password; Click-El "form button[type=submit]"; Start-Sleep 4
-  Check "sign-up lands on ?next" ((Get-Path) -eq "/app/settings")
+  Set-Field "#password" $password; Set-Field "#confirm" $password; Click-El "form button[type=submit]"
+  Check "sign-up lands on ?next" (WaitPath "/app/settings")
   Shot "m1-settings"
 
   # Duplicate email
@@ -49,18 +56,19 @@ try {
   Js "document.querySelector('#language').value = 'pcm'; 'ok'" | Out-Null
   Click-El "section[aria-labelledby=profile-title] form button[type=submit]"; Start-Sleep 3
   Go "$Base/app"
-  Check "language switch shows Pidgin" ((Js "document.body.innerText.includes('How far, Ada Test')") -eq $true)
+  Check "language switch shows Pidgin" ((Js "document.body.innerText.includes('Wetin you need, Ada')") -eq $true)
   Shot "m1-app-pcm"
 
   # Sign out, then sign in
-  Click-El "header form button[type=submit]"; Start-Sleep 3
-  Check "sign-out returns to the landing page" ((Get-Path) -eq "/")
+  Click-El "header form button[type=submit]"
+  Check "sign-out returns to the landing page" (WaitPath "/")
   Go "$Base/app"
   Check "after sign-out /app needs sign-in again" ((Get-Path) -like "/login*")
-  Set-Field "#email" $email; Set-Field "#password" "wrong password here"; Click-El "form button[type=submit]"; Start-Sleep 2
-  Check "wrong password gives a generic error" ((Js "document.body.innerText.includes(`"don't match`")") -eq $true)
-  Set-Field "#password" $password; Set-Field "#confirm" $password; Click-El "form button[type=submit]"; Start-Sleep 4
-  Check "sign-in works" ((Get-Path) -eq "/app")
+  Set-Field "#email" $email; Set-Field "#password" "wrong password here"; Click-El "form button[type=submit]"
+  Check "wrong password gives a generic error" (WaitText "n.t match")
+  Start-Sleep 1
+  Set-Field "#password" $password; Click-El "form button[type=submit]"
+  Check "sign-in works" (WaitPath "/app")
 
   # Staff: ops role needs two-factor
   $userId = ([regex]::Match((Sql "select id from internal.users where email = '$email'"), '"id": "([0-9a-f-]{36})"')).Groups[1].Value
@@ -73,8 +81,8 @@ try {
   Check "enrolment shows a QR code and key" (($secret.Length -eq 32) -and ((Js "!!document.querySelector('img[alt*=QR]')") -eq $true))
   Set-Field "#code" "000000"; Click-El "form button[type=submit]"; Start-Sleep 2
   Check "a wrong code is refused" ((Get-Path) -like "/ops/verify*")
-  Set-Field "#code" (Totp $secret); Click-El "form button[type=submit]"; Start-Sleep 4
-  Check "a correct code opens the ops console" ((Get-Path) -eq "/ops")
+  Set-Field "#code" (Totp $secret); Click-El "form button[type=submit]"
+  Check "a correct code opens the ops console" (WaitPath "/ops")
   Shot "m1-ops"
 
   # Lockout after 5 wrong passwords

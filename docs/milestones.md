@@ -83,3 +83,44 @@ Progress against SPEC §21.4. Each milestone ends with tests green, migrations a
 - Keep `.secrets/supabase-signing-key.json` somewhere safe (a password manager) and delete it from the laptop. The
   server copy is in `.env`.
 - Add `SUPABASE_JWT_SIGNING_KEY` and `APP_ENCRYPTION_KEY` to Vercel when deploying.
+
+## M2 — Core data model and task engine
+
+**Status:** built, awaiting founder review (2026-10-15). Eight migrations applied to the live project, all additive.
+
+| Item                                                                                                      | Where                                | Status                         |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------ |
+| Areas (PostGIS), places, saved places, `resolve_area`, `upsert_area`                                      | `…_core_areas.sql`                   | applied                        |
+| Providers (column grants, public view), members, services, requests, check-ins, `nearby_providers`        | `…_core_providers.sql`               | applied                        |
+| Conversations, messages, media, safety events, tasks, events, options, confirmations, checklists, shares  | `…_core_conversations_tasks.sql`     | applied, realtime on 3 tables  |
+| `transition_task`, status guard trigger, `task_timer_valid`, leases, confirmations, provider access       | same                                 | applied                        |
+| Power reports and status (§5.1 algorithm), local alerts, demand signals                                   | `…_core_local_data.sql`              | applied                        |
+| Reminders, watches (10 active, 4 fires/day), push, notifications, KB, ratings, flags, disputes, ops queue | `…_core_reminders_trust.sql`         | applied                        |
+| Jobs, webhook events, heartbeats, LLM calls and breaker, web lookups, analytics, pg_cron tick             | `…_core_internal_jobs.sql`           | applied                        |
+| Task engine with retries, transition table mirrored in TypeScript                                         | `src/server/tasks/*`                 | done                           |
+| Job runner, handlers (task timers, power recompute), webhook ingest                                       | `src/server/jobs/*`                  | done                           |
+| Tick endpoint (202 + `after()`, batches of 10, 50 s budget, reaper, heartbeat)                            | `src/app/api/internal/tick/route.ts` | done                           |
+| Area import                                                                                               | `scripts/import-areas.ts`            | done, no areas imported yet    |
+| Seed data                                                                                                 | —                                    | **not done** by design (D-018) |
+| Payments, refunds, guarantee claims, price reports                                                        | —                                    | Phase 1b/2 (D-016)             |
+
+### Acceptance (§21.4)
+
+- [~] Every table and access function is tested: 25 integration checks against the live database (D-012 explains why not
+  pgTAP) cover tasks, events, confirmations, leases, jobs, webhooks, provider contact reveal and power reports. Not yet
+  covered: watches, reminders, KB, ops tables (they get their tests with the milestones that write them).
+- [x] Every allowed transition works and every illegal one is rejected, in Postgres and in TypeScript (a unit test
+      fails if the two tables drift).
+- [~] A 2-minute timer fires within 2 minutes: due timers are picked up and run (tested). The live trigger needs the
+  app deployed and the Vault secrets set (below).
+- [x] Killing a tick mid-run causes no duplicate side effects (tested: claim, kill, reap, re-run, late finish refused).
+- [ ] `supabase db reset` reproduces a dev DB: not possible against the shared live project (D-005, D-018).
+
+### Founder steps
+
+- Generate a cron secret (`node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"`), add it
+  as `OYA_CRON_SECRET` in Vercel, then in the Supabase SQL editor:
+  `select vault.create_secret('https://<your-domain>/api/internal/tick', 'oya_tick_url');`
+  `select vault.create_secret('<the same secret>', 'oya_cron_secret');`
+- Map Uyo power clusters as GeoJSON and import them:
+  `pnpm tsx scripts/import-areas.ts clusters.geojson --source ambassadors-2026-11 --dry-run`, then without `--dry-run`.

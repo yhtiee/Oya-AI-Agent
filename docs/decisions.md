@@ -3,6 +3,42 @@
 Choices made where SPEC.md is silent, or where the founder chose differently from the spec (SPEC §0 rule 5).
 Newest first. Each entry: what, why, and how to revisit.
 
+## D-018 — No seed data in the shared project (M2, 2026-10-15)
+
+SPEC M2 asks for areas, a dev-only fake provider set and draft KB documents as seed data. With one live project (D-005)
+that also holds the real waitlist, fake providers would be visible to real users. So nothing is seeded:
+`scripts/import-areas.ts` imports real boundaries once ambassadors map them, KB documents are written and verified in M5,
+and tests create and delete their own data. `supabase db reset` can't be run against the live project. **Revisit:**
+add `supabase/seed.sql` with fake providers once a local or staging database exists.
+
+## D-017 — pg_cron is the only tick trigger for now (M2, 2026-10-15)
+
+SPEC §9 also uses Vercel Cron every minute, but that needs the Pro plan; on Hobby a per-minute cron fails the deploy.
+The tick endpoint already accepts Vercel's `Authorization: Bearer CRON_SECRET`, so turning it on later means only adding
+`vercel.json` with `{"crons":[{"path":"/api/internal/tick","schedule":"* * * * *"}]}`. pg_cron reads its URL and
+secret from Vault (`oya_tick_url`, `oya_cron_secret`, optional `oya_vercel_bypass`) and does nothing until they're set.
+
+## D-016 — Payments, refunds, guarantee claims and price reports wait for their phase (M2, 2026-10-15)
+
+They are Phase 1b/2 tables (§12.2) and nothing in 1a writes them. They arrive with the milestone that first uses them, so
+their RLS is designed alongside the flows.
+
+## D-015 — Version conflicts raise `PT409`, not `40001` (M2, 2026-10-15)
+
+**Differs from the spec** (§8.2 says `serialization_failure`). PostgREST retries a transaction itself when it sees
+`40001`, so a stale-version call hung instead of returning. `transition_task` raises `PT409` (PostgREST turns it into
+HTTP 409), and `transitionTask()` re-reads and retries up to 3 times as the spec describes.
+
+## D-014 — Server-only functions live in `public`, granted to `service_role` (M2, 2026-10-15)
+
+SPEC §12.4 names some functions `internal.*` (`claim_jobs`, `ingest_webhook`, `claim_job_by_id`,
+`llm_breaker_record`, `record_web_lookup`). The `internal` schema isn't exposed through the Data API (D-010), so they are
+`public.*` security-definer functions with `execute` revoked from everyone except `service_role`; the tables stay in
+`internal`. Also added beyond the spec: `enqueue_job`, `complete_job`, `fail_job`, `reap_jobs`, `record_heartbeat`,
+`jobs_overview`, `log_llm_call`, `llm_breaker_check`, `track_event`, `create_confirmation` (atomically supersedes the
+previous pending one), `record_power_report` (ops, DisCo and button replies), `claim_watch_fire`, `delete_jobs` and
+`task_timer_jobs` (retention and tests), and `task_timer_valid` (the §8.3 check, by event sequence number).
+
 ## D-013 — Server error messages are English only for now (M1, 2026-10-08)
 
 Form labels and page copy come from the `en` / `pcm` catalogues, but messages returned by server actions ("Too many wrong

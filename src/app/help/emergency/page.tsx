@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import en from "@/i18n/en.json";
 import pcm from "@/i18n/pcm.json";
-import { hasUnverifiedResources, verifiedResources } from "@/server/safety/emergency-resources";
+import { hasUnverifiedResources, verifiedResources } from "@/lib/safety/emergency-resources";
 
 /*
  * Static, no JavaScript needed: it must work on Opera Mini extreme mode and, once the service

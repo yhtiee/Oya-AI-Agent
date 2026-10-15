@@ -1,0 +1,557 @@
+{
+  "$comment": "Router suite, first 100 utterances (SPEC §7.12, M3). Pass: skill+scope accuracy >= 90%. `skill` may be an array of acceptable answers. These are drafted by the team; Pilot 0 replaces and extends them with utterances written and recorded by Uyo speakers (>= 200, >= 40% Pidgin).",
+  "suite": "router",
+  "purpose": "router",
+  "cases": [
+    { "id": "r001", "lang": "pcm", "text": "Light don come for Ewet Housing?", "skill": "power", "scope": "in_scope" },
+    {
+      "id": "r002",
+      "lang": "en",
+      "text": "Is there power in Shelter Afrique right now?",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    { "id": "r003", "lang": "en", "text": "Tell me when light comes back", "skill": "power", "scope": "in_scope" },
+    {
+      "id": "r004",
+      "lang": "pcm",
+      "text": "NEPA don take light again for our area",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r005",
+      "lang": "en",
+      "text": "I have 34 units left, how many days will it last?",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    { "id": "r006", "lang": "pcm", "text": "Light dey now for Itam", "skill": "power", "scope": "in_scope" },
+    {
+      "id": "r007",
+      "lang": "pcm",
+      "text": "Abeg tell me once light return for Uyo Village Road",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r008",
+      "lang": "en",
+      "text": "Power just went off on Nwaniba Road",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r009",
+      "lang": "pcm",
+      "text": "How many days my 20 units go last?",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r010",
+      "lang": "en",
+      "text": "When did PHED restore supply on Oron Road?",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r011",
+      "lang": "pcm",
+      "text": "Dem don bring light for Afaha Oku?",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r012",
+      "lang": "en",
+      "text": "Alert me if power goes off overnight",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r013",
+      "lang": "en",
+      "text": "How much is passport renewal now?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r014",
+      "lang": "pcm",
+      "text": "Wetin I need to register business name for CAC?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    { "id": "r015", "lang": "en", "text": "How do I get my NIN?", "skill": "paperwork", "scope": "in_scope" },
+    {
+      "id": "r016",
+      "lang": "pcm",
+      "text": "Driver licence renewal, how e dey go?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r017",
+      "lang": "en",
+      "text": "What documents do I need for a fresh international passport?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r018",
+      "lang": "en",
+      "text": "Do I need a tax ID to open a bank account now?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r019",
+      "lang": "pcm",
+      "text": "My vehicle papers don expire, wetin I go do?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r020",
+      "lang": "en",
+      "text": "How long does NIN modification take?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r021",
+      "lang": "pcm",
+      "text": "How much dem dey collect for CAC business name?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r022",
+      "lang": "en",
+      "text": "Where do I renew my roadworthiness certificate in Akwa Ibom?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r023",
+      "lang": "pcm",
+      "text": "I wan change my name for NIN, how?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r024",
+      "lang": "en",
+      "text": "Can I renew my passport online?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r025",
+      "lang": "pcm",
+      "text": "Clinic wey open now near me, my pikin get fever",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r026",
+      "lang": "en",
+      "text": "24-hour pharmacy near Ikot Ekpene Road",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r027",
+      "lang": "en",
+      "text": "Which hospital is open now around Ewet?",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r028",
+      "lang": "pcm",
+      "text": "Lab wey fit do malaria test today for Aka Road",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    { "id": "r029", "lang": "en", "text": "I need a dentist this afternoon", "skill": "get_help", "scope": "in_scope" },
+    {
+      "id": "r030",
+      "lang": "pcm",
+      "text": "Pharmacy wey dey open for night around Itam",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r031",
+      "lang": "en",
+      "text": "What's the ambulance number in Uyo?",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r032",
+      "lang": "en",
+      "text": "Find me a clinic that does antenatal",
+      "skill": "get_help",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r033",
+      "lang": "pcm",
+      "text": "My kitchen tap dey leak, I need plumber tomorrow morning",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r034",
+      "lang": "en",
+      "text": "I need an electrician, my sockets stopped working",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r035",
+      "lang": "pcm",
+      "text": "Abeg find me mechanic, my car no wan start",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r036",
+      "lang": "en",
+      "text": "AC repair this weekend in Osongama",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r037",
+      "lang": "pcm",
+      "text": "Generator don spoil, I need repairer today",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r038",
+      "lang": "en",
+      "text": "Can you get a carpenter to fix my wardrobe door?",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r039",
+      "lang": "pcm",
+      "text": "I need person wey go paint my parlour",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r040",
+      "lang": "en",
+      "text": "Looking for a tailor to adjust a dress before Saturday",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r041",
+      "lang": "pcm",
+      "text": "Toilet don block, plumber fit come now?",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r042",
+      "lang": "en",
+      "text": "I need someone to clean my apartment on Friday",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r043",
+      "lang": "pcm",
+      "text": "Wetin plumber dey charge for Uyo?",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r044",
+      "lang": "en",
+      "text": "Electrician to install a ceiling fan",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    { "id": "r045", "lang": "pcm", "text": "Where I fit buy amala near Itam?", "skill": "food", "scope": "in_scope" },
+    { "id": "r046", "lang": "en", "text": "Food near me", "skill": "food", "scope": "in_scope" },
+    {
+      "id": "r047",
+      "lang": "pcm",
+      "text": "I wan chop pepper soup, which buka dey open?",
+      "skill": "food",
+      "scope": "in_scope"
+    },
+    { "id": "r048", "lang": "en", "text": "Order jollof rice for pickup at 1pm", "skill": "food", "scope": "in_scope" },
+    {
+      "id": "r049",
+      "lang": "pcm",
+      "text": "Who dey sell afang soup for Wellington Bassey Way?",
+      "skill": "food",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r050",
+      "lang": "en",
+      "text": "Is there a buka that sells edikang ikong today?",
+      "skill": "food",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r051",
+      "lang": "pcm",
+      "text": "Abeg book me 2 plate of rice and chicken for lunch",
+      "skill": "food",
+      "scope": "in_scope"
+    },
+    { "id": "r052", "lang": "en", "text": "Where can I get suya tonight?", "skill": "food", "scope": "in_scope" },
+    { "id": "r053", "lang": "pcm", "text": "Any wahala for road today?", "skill": "local_alerts", "scope": "in_scope" },
+    { "id": "r054", "lang": "en", "text": "Is Oron Road flooded?", "skill": "local_alerts", "scope": "in_scope" },
+    {
+      "id": "r055",
+      "lang": "en",
+      "text": "Are there any road closures in Uyo this week?",
+      "skill": "local_alerts",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r056",
+      "lang": "pcm",
+      "text": "Light go dey this weekend? I hear say dem wan do maintenance",
+      "skill": ["local_alerts", "power"],
+      "scope": "in_scope"
+    },
+    { "id": "r057", "lang": "pcm", "text": "Dem block Aka Road?", "skill": "local_alerts", "scope": "in_scope" },
+    {
+      "id": "r058",
+      "lang": "en",
+      "text": "Any planned outage for Ewet tomorrow?",
+      "skill": ["local_alerts", "power"],
+      "scope": "in_scope"
+    },
+    {
+      "id": "r059",
+      "lang": "en",
+      "text": "Remind me to pay my rent on the 1st",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r060",
+      "lang": "pcm",
+      "text": "Remind me make I buy gas next tomorrow",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r061",
+      "lang": "en",
+      "text": "Remind me every month to buy prepaid units",
+      "skill": ["reminders", "power"],
+      "scope": "in_scope"
+    },
+    {
+      "id": "r062",
+      "lang": "pcm",
+      "text": "Wake me by 6 for Monday make I go passport office",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r063",
+      "lang": "en",
+      "text": "Set a reminder for my clinic appointment Thursday 9am",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r064",
+      "lang": "pcm",
+      "text": "Abeg remind me this evening to call my mama",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r065",
+      "lang": "en",
+      "text": "Remind me when my driver's licence expires in March",
+      "skill": ["reminders", "paperwork"],
+      "scope": "in_scope"
+    },
+    {
+      "id": "r066",
+      "lang": "pcm",
+      "text": "Find me house to rent for Shelter Afrique",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r067",
+      "lang": "en",
+      "text": "Where can I buy a used phone in Uyo?",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r068",
+      "lang": "en",
+      "text": "How much is transport from Uyo to Calabar?",
+      "skill": [null, "web_answers"],
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r069",
+      "lang": "pcm",
+      "text": "Which school dey good for my pikin for Ewet?",
+      "skill": [null, "web_answers"],
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r070",
+      "lang": "en",
+      "text": "I need a cheap laptop for school",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r071",
+      "lang": "pcm",
+      "text": "Where dem dey sell cement cheap for Uyo?",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r072",
+      "lang": "en",
+      "text": "When does the University of Uyo resume?",
+      "skill": [null, "web_answers"],
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r073",
+      "lang": "pcm",
+      "text": "I wan learn how to bake cake, where I fit go?",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r074",
+      "lang": "en",
+      "text": "Is there a gym near Ibom Plaza?",
+      "skill": null,
+      "scope": "general_everyday"
+    },
+    {
+      "id": "r075",
+      "lang": "pcm",
+      "text": "Who fit help me move my load go new house?",
+      "skill": [null, "artisans"],
+      "scope": ["general_everyday", "in_scope"]
+    },
+    { "id": "r076", "lang": "en", "text": "Who won the 2010 world cup?", "skill": null, "scope": "off_scope" },
+    {
+      "id": "r077",
+      "lang": "en",
+      "text": "Write me a python script to sort a list",
+      "skill": null,
+      "scope": "off_scope"
+    },
+    {
+      "id": "r078",
+      "lang": "pcm",
+      "text": "Abeg solve this maths homework for me",
+      "skill": null,
+      "scope": "off_scope"
+    },
+    { "id": "r079", "lang": "en", "text": "Tell me a joke", "skill": null, "scope": "off_scope" },
+    { "id": "r080", "lang": "pcm", "text": "You get girlfriend?", "skill": null, "scope": "off_scope" },
+    { "id": "r081", "lang": "en", "text": "What's the capital of Australia?", "skill": null, "scope": "off_scope" },
+    {
+      "id": "r082",
+      "lang": "pcm",
+      "text": "Which club go win Champions League this year?",
+      "skill": null,
+      "scope": "off_scope"
+    },
+    { "id": "r083", "lang": "en", "text": "Explain quantum physics simply", "skill": null, "scope": "off_scope" },
+    { "id": "r084", "lang": "en", "text": "Good morning", "skill": null, "scope": "in_scope" },
+    { "id": "r085", "lang": "pcm", "text": "How far", "skill": null, "scope": "in_scope" },
+    { "id": "r086", "lang": "en", "text": "Thank you so much", "skill": null, "scope": "in_scope" },
+    { "id": "r087", "lang": "pcm", "text": "Thank you o, you try", "skill": null, "scope": "in_scope" },
+    { "id": "r088", "lang": "en", "text": "Hello Oya", "skill": null, "scope": "in_scope" },
+    { "id": "r089", "lang": "pcm", "text": "light don come?", "skill": "power", "scope": "in_scope" },
+    {
+      "id": "r090",
+      "lang": "pcm",
+      "text": "abeg how i go take renew passport",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r091",
+      "lang": "pcm",
+      "text": "electrician wey fit come today for nwaniba",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    { "id": "r092", "lang": "en", "text": "pharmacy open now?", "skill": "get_help", "scope": "in_scope" },
+    {
+      "id": "r093",
+      "lang": "pcm",
+      "text": "Remind me for 4pm make I carry my pikin from school",
+      "skill": "reminders",
+      "scope": "in_scope"
+    },
+    { "id": "r094", "lang": "en", "text": "light back yet in osongama?", "skill": "power", "scope": "in_scope" },
+    {
+      "id": "r095",
+      "lang": "pcm",
+      "text": "I don pay for CAC, how long e go take?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r096",
+      "lang": "pcm",
+      "text": "Rain don flood road for Ikot Ekpene Road?",
+      "skill": "local_alerts",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r097",
+      "lang": "en",
+      "text": "Need a vulcanizer near Udo Udoma Avenue",
+      "skill": "artisans",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r098",
+      "lang": "pcm",
+      "text": "Abeg which side dem dey sell ofe owerri for Uyo?",
+      "skill": "food",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r099",
+      "lang": "en",
+      "text": "I'd like my units to last till Friday, I have 15",
+      "skill": "power",
+      "scope": "in_scope"
+    },
+    {
+      "id": "r100",
+      "lang": "pcm",
+      "text": "My NIN slip don lost, wetin I go do?",
+      "skill": "paperwork",
+      "scope": "in_scope"
+    }
+  ]
+}

@@ -33,7 +33,7 @@ export default async function SettingsPage() {
   const when = (iso: string) => formatInZone(iso, "d MMM yyyy, h:mm a", session.timezone);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 py-8">
       <h1 className="t-h1 text-forest">{t("title")}</h1>
 
       <section aria-labelledby="profile-title" className="rounded-card border border-hairline bg-paper p-6 sm:p-8">

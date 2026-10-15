@@ -19,6 +19,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Prompts are read from prompts/*.md at runtime (src/server/agent/prompts.ts).
+  outputFileTracingIncludes: { "/**": ["./prompts/**/*.md"] },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

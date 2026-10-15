@@ -3,6 +3,65 @@
 Choices made where SPEC.md is silent, or where the founder chose differently from the spec (SPEC §0 rule 5).
 Newest first. Each entry: what, why, and how to revisit.
 
+## D-023 — Eval fixtures are a team draft; a model grader isn't used yet (M3, 2026-10-15)
+
+The first 100 router utterances (48% Pidgin) and the 110-case safety suite in `evals/fixtures/` were written by the team,
+not by Uyo speakers as §7.12 asks. They are good enough to choose a model and catch regressions, not to sign off a
+launch. Router and safety suites are scored exactly (labels), so no grader model is needed yet; the golden-conversation
+suite (M4) will need one. **Revisit:** Pilot 0 ambassadors write and record ≥ 200 utterances (≥ 40% Pidgin) and review
+the emergency phrases (`config/emergency-phrases.json`) with native Pidgin and Ibibio speakers.
+
+## D-022 — M3 ships one stub skill (M3, 2026-10-15)
+
+`paperwork` runs as the stub skill: it answers only from published guides (none exist yet, so it says Oya hasn't
+checked that process and offers a teammate) and can propose `record_preference`, which exercises confirmations end to
+end. Every other skill is routed and logged as demand, then answered honestly ("still learning to do that here")
+until its milestone. Web turns don't create tasks yet; skills that need one create it from M4.
+
+## D-021 — A small hand-written service worker instead of Serwist (M3, 2026-10-15)
+
+`public/sw.js` precaches `/help/emergency` and caches built static assets; a failed page load falls back to the
+emergency page. Personal pages and API responses are never cached. The browser keyword check works offline once the
+chat is open. Serwist's App Router integration needs a webpack build step that Next 16's Turbopack build doesn't run.
+**Revisit:** with the offline outbox (Phase 1b).
+
+## D-020 — Web pipeline details the spec leaves open (M3, 2026-10-15)
+
+- **Busy conversation:** if the lease isn't free within 15 seconds, the web reply says "still working on your last
+  message" rather than enqueuing a `process_inbound` job (the web has no inbound job handler until channels arrive).
+- **Button mode:** typed messages aren't queued as `deferred_message` jobs yet (that handler lands with notifications,
+  M4); the reply asks the user to try again later instead of promising to read it.
+- **Card taps** claim the confirmation atomically but don't take the conversation lease; claim_confirmation already
+  makes a double run impossible.
+- **Tool-call logs** without a task go to `internal.analytics_events` (`agent.tool_call`, redacted); with a task they
+  are `task_events` (`tool_call`, ops visibility) as §7.5 says.
+- **Rate limits (429)** from the model provider don't count as breaker failures: they're quota, not an outage. The call
+  waits for `retry-after` if the turn has time; otherwise the user gets "Lots of people are asking right now… 112".
+
+## D-019 — Groq free tier as the bootstrap model provider (founder decision, M3, 2026-10-15)
+
+**Differs from the spec**, which makes Gemini (paid tier) primary in bootstrap mode (§20.1, ADR-22). The founder asked
+for a free provider. Groq was chosen over the alternatives offered:
+
+- Google AI Studio's **free** tier uses prompts for training; Oya handles health, emergency and self-harm messages, and
+  §10.1a already restricts Gemini to the paid tier for that reason.
+- NVIDIA NIM and GitHub Models are for development and testing only; OpenRouter's free tier allows 50 requests a day.
+- Groq has a permanent free tier, is fast (helps the 5-second first-sentence target), supports strict JSON-schema output
+  and tool calls, and states it doesn't train on API data (**founder to confirm in Groq's terms**).
+
+Defaults (`config/llm-routing.json`): router and safety classifier on `openai/gpt-oss-20b`, skills on
+`openai/gpt-oss-120b`, Gemini wired as an optional, disabled fallback. The eval suites decide the final pick.
+
+**Capacity (measured 2026-10-15):** per model, 8,000 tokens a minute, 1,000 requests a day and, the binding limit, **200,000
+tokens a day** (only visible in the 429 error, not in the rate-limit headers). A router call is about 2,700–3,000
+tokens, so each model handles about **65–70 router-sized calls a day** and about 3 a minute. With the router and skills
+on different models that is roughly 60 user messages a day: enough for development, **not** for Pilot 0. Eval runs
+(210 calls per model) exceed a day's allowance on their own.
+Free-tier calls are logged at $0 (`billed: false` in `config/llm-prices.json`) with their list price kept for the cost
+report. `LLM_ALLOW_UNEVALUATED=true` lets non-production environments run purposes before their eval report exists.
+**Revisit:** a paid tier (Groq Developer, or Gemini/Claude per the §20.1 ladder) before any public launch; shrinking the
+router prompt's examples raises capacity but needs a fresh eval run.
+
 ## D-018 — No seed data in the shared project (M2, 2026-10-15)
 
 SPEC M2 asks for areas, a dev-only fake provider set and draft KB documents as seed data. With one live project (D-005)

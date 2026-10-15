@@ -1,0 +1,41 @@
+{
+  "$comment": "Model per purpose (SPEC §7.3, §10.1a; D-019). Bootstrap: Groq free tier is primary. A purpose runs only if `enabled` is true, and scripts/check-llm-routing.ts refuses `enabled: true` or `fallbackEnabled: true` without a passing eval report in evals/reports/ for that model and purpose, dated within 30 days. Env vars LLM_ROUTER_MODEL / LLM_SIMPLE_MODEL / LLM_COMPLEX_MODEL override the primary model id.",
+  "version": 1,
+  "purposes": {
+    "router": {
+      "primary": { "provider": "groq", "model": "openai/gpt-oss-20b" },
+      "fallback": { "provider": "google", "model": "gemini-3.5-flash-lite" },
+      "enabled": false,
+      "fallbackEnabled": false,
+      "timeoutMs": 8000
+    },
+    "safety_classifier": {
+      "primary": { "provider": "groq", "model": "openai/gpt-oss-20b" },
+      "fallback": { "provider": "google", "model": "gemini-3.5-flash-lite" },
+      "enabled": false,
+      "fallbackEnabled": false,
+      "timeoutMs": 6000
+    },
+    "simple_skill": {
+      "primary": { "provider": "groq", "model": "openai/gpt-oss-120b" },
+      "fallback": { "provider": "google", "model": "gemini-3.5-flash" },
+      "enabled": false,
+      "fallbackEnabled": false,
+      "timeoutMs": 20000
+    },
+    "complex_skill": {
+      "primary": { "provider": "groq", "model": "openai/gpt-oss-120b" },
+      "fallback": { "provider": "google", "model": "gemini-3.5-flash" },
+      "enabled": false,
+      "fallbackEnabled": false,
+      "timeoutMs": 25000
+    },
+    "eval_grader": {
+      "primary": { "provider": "groq", "model": "openai/gpt-oss-120b" },
+      "fallback": null,
+      "enabled": true,
+      "fallbackEnabled": false,
+      "timeoutMs": 30000
+    }
+  }
+}

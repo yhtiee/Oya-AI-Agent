@@ -92,7 +92,17 @@
     "enrolStart": "Show my setup code",
     "code": "6-digit code",
     "verify": "Check am",
-    "verifying": "E dey check…"
+    "verifying": "E dey check…",
+    "queueTitle": "Ops queue",
+    "queueLead": "{count, plural, =0 {Nothing dey open.} one {# item dey open, the urgent ones first.} other {# items dey open, the urgent ones first.}}",
+    "filters": "Filters",
+    "allReasons": "All reasons",
+    "queueEmpty": "Nothing dey wait. Good.",
+    "takeOver": "Take over",
+    "handBack": "Hand back",
+    "agentPaused": "agent don pause",
+    "noTask": "No task",
+    "selfHarmItem": "Safety event (self-harm support show). Na only admin fit see the text."
   },
   "emergency": {
     "title": "Emergency help",
@@ -108,5 +118,53 @@
   "offline": {
     "title": "Network no dey",
     "message": "Your message no go send. We don keep wetin you type."
+  },
+  "chat": {
+    "emptyTitle": "Wetin you need, {name}?",
+    "emptyLead": "Talk wetin you need. Oya go sort am.",
+    "composerLabel": "Message Oya",
+    "composerPlaceholder": "Type wetin you need…",
+    "send": "Send",
+    "thinking": "Oya dey think",
+    "failed": "E no go. Abeg try again. For emergency, call 112.",
+    "offline": "Network no dey. Your message no go send. We keep wetin you type.",
+    "offlineBanner": "Network no dey. Emergency numbers still dey work.",
+    "emergencyTitle": "Emergency",
+    "emergencyButton": "Emergency",
+    "call112": "Call 112 now",
+    "moreNumbers": "All emergency numbers",
+    "supportTitle": "Support",
+    "supportLinesPending": "Our team dey check the support line numbers. If you dey for danger, call 112.",
+    "staleGuide": "We need check this guide again. Confirm the fee for the official site.",
+    "answered": "E don set.",
+    "expired": "This request don expire.",
+    "close": "Close",
+    "suggest": {
+      "power": "Light don come?",
+      "passport": "Renew my passport",
+      "plumber": "Plumber for tomorrow",
+      "clinic": "Clinic wey open now",
+      "remind": "Remind me…",
+      "road": "Any wahala for road today?",
+      "food": "Food near me"
+    },
+    "composerHint": "Enter to send · Shift+Enter for new line"
+  },
+  "sidebar": {
+    "label": "Your requests",
+    "newRequest": "New request",
+    "active": "Active",
+    "scheduled": "Scheduled",
+    "done": "Done",
+    "savedPlaces": "Saved places",
+    "ops": "Ops console",
+    "noConversations": "Your conversations go show here.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This week",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "open": "Open menu",
+    "close": "Close menu"
   }
 }

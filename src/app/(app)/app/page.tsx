@@ -1,19 +1,21 @@
-import { getTranslations } from "next-intl/server";
+import { Chat } from "@/components/chat/Chat";
+import { loadChatHistory } from "@/server/agent/history";
 import { requireSession } from "@/server/auth/session";
+import { getServiceClient } from "@/server/db/service-client";
 
-// Placeholder home until the conversation lands in M3.
-export default async function AppHome() {
+/* /app opens the latest conversation, /app?c={id} a specific one, /app?new=1 a fresh one. */
+export default async function AppHome({ searchParams }: PageProps<"/app">) {
   const session = await requireSession("/app");
-  const t = await getTranslations("app");
+  const params = await searchParams;
+  const requested = params.new ? "new" : typeof params.c === "string" ? params.c : null;
+  const history = await loadChatHistory(getServiceClient(), session.userId, requested);
 
   return (
-    <div>
-      <h1 className="t-h1 text-forest">{t("greeting", { name: session.displayName })}</h1>
-      <p className="mt-3 max-w-[56ch] t-body-lg text-body">{t("lead")}</p>
-      <section className="mt-10 rounded-card border border-hairline bg-paper p-8">
-        <h2 className="t-h3 text-forest">{t("emptyTitle")}</h2>
-        <p className="mt-2 text-body">{t("emptyBody")}</p>
-      </section>
-    </div>
+    <Chat
+      key={history.conversationId ?? `new-${String(params.new ?? "")}`}
+      firstName={session.displayName.split(" ")[0] ?? session.displayName}
+      initialMessages={history.messages}
+      initialConversationId={history.conversationId}
+    />
   );
 }

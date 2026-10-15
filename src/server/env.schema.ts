@@ -47,7 +47,10 @@ export const envSchema = z
     CRON_SECRET: z.string().min(16).optional(),
     VERCEL_AUTOMATION_BYPASS_SECRET: optionalString,
 
-    // LLM
+    // LLM. Bootstrap primary is Groq's free tier (D-019); Anthropic and Gemini are optional.
+    GROQ_API_KEY: optionalString,
+    /** Non-production only: lets purposes run before their eval report exists (D-019). */
+    LLM_ALLOW_UNEVALUATED: bool,
     ANTHROPIC_API_KEY: optionalString,
     LLM_ROUTER_MODEL: optionalString,
     LLM_SIMPLE_MODEL: optionalString,

@@ -92,7 +92,17 @@
     "enrolStart": "Show my setup code",
     "code": "6-digit code",
     "verify": "Verify",
-    "verifying": "Checking…"
+    "verifying": "Checking…",
+    "queueTitle": "Ops queue",
+    "queueLead": "{count, plural, =0 {Nothing open.} one {# open item, most urgent first.} other {# open items, most urgent first.}}",
+    "filters": "Filters",
+    "allReasons": "All reasons",
+    "queueEmpty": "Nothing waiting. Good.",
+    "takeOver": "Take over",
+    "handBack": "Hand back",
+    "agentPaused": "agent paused",
+    "noTask": "No task attached",
+    "selfHarmItem": "Safety event (self-harm support shown). Text is admin-only."
   },
   "emergency": {
     "title": "Emergency help",
@@ -108,5 +118,53 @@
   "offline": {
     "title": "You're offline",
     "message": "Your message will not be sent. We've kept what you typed."
+  },
+  "chat": {
+    "emptyTitle": "What do you need, {name}?",
+    "emptyLead": "Say what you need. Oya sorts it.",
+    "composerLabel": "Message Oya",
+    "composerPlaceholder": "Type what you need…",
+    "send": "Send",
+    "thinking": "Oya is thinking",
+    "failed": "That didn't go through. Please try again. For emergencies, call 112.",
+    "offline": "You're offline. Your message will not be sent. Your draft is kept.",
+    "offlineBanner": "You're offline. Emergency numbers still work.",
+    "emergencyTitle": "Emergency",
+    "emergencyButton": "Emergency",
+    "call112": "Call 112 now",
+    "moreNumbers": "All emergency numbers",
+    "supportTitle": "Support",
+    "supportLinesPending": "Support line numbers are being checked by our team. If you are in danger, call 112.",
+    "staleGuide": "This guide is due for a re-check. Confirm fees on the official site.",
+    "answered": "Done.",
+    "expired": "This request has expired.",
+    "close": "Close",
+    "suggest": {
+      "power": "Has light come back?",
+      "passport": "Renew my passport",
+      "plumber": "Plumber for tomorrow",
+      "clinic": "Clinic open now",
+      "remind": "Remind me…",
+      "road": "Any road wahala today?",
+      "food": "Food near me"
+    },
+    "composerHint": "Enter to send · Shift+Enter for a new line"
+  },
+  "sidebar": {
+    "label": "Your requests",
+    "newRequest": "New request",
+    "active": "Active",
+    "scheduled": "Scheduled",
+    "done": "Done",
+    "savedPlaces": "Saved places",
+    "ops": "Ops console",
+    "noConversations": "Your conversations will show here.",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This week",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "open": "Open menu",
+    "close": "Close menu"
   }
 }

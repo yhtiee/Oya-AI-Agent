@@ -74,7 +74,9 @@ function classify(e: unknown): { status: CallStatus; retryable: boolean } {
   }
   if (APICallError.isInstance(e)) {
     const code = e.statusCode ?? 0;
-    return { status: "error", retryable: code === 429 || code >= 500 };
+    // Groq returns 400 json_validate_failed when a structured reply doesn't parse; a second try usually works.
+    const badJson = code === 400 && String(e.responseBody ?? "").includes("json_validate_failed");
+    return { status: "error", retryable: code === 429 || code >= 500 || badJson };
   }
   return { status: "error", retryable: false };
 }
@@ -222,7 +224,8 @@ export async function generateStructured<S extends z.ZodType>(
       messages: input.messages,
       output: Output.object({ schema: input.schema }),
       maxRetries: 0,
-      maxOutputTokens: input.maxOutputTokens ?? 600,
+      // Reasoning models (gpt-oss) spend part of this on thinking before the JSON; too low a cap truncates the JSON.
+      maxOutputTokens: input.maxOutputTokens ?? 1500,
       temperature: 0,
       abortSignal: signal,
       providerOptions: providerOptions(ref, { structured: true }),
@@ -264,7 +267,7 @@ export async function runToolLoop(
         tools: input.tools,
         stopWhen: stepCountIs((input.maxToolCalls ?? 6) + 1),
         maxRetries: 0,
-        maxOutputTokens: 700,
+        maxOutputTokens: 1500,
         temperature: 0.3,
         abortSignal: signal,
         providerOptions: providerOptions(ref),

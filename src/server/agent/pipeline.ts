@@ -225,7 +225,7 @@ export async function runWebTurn(input: TurnInput): Promise<void> {
         });
       } catch (e) {
         if (!(e instanceof LlmUnavailableError)) throw e;
-        console.log(`router failed: ${e.reason} (${e.message})`);
+        console.warn(JSON.stringify({ level: "warn", msg: "router unavailable", reason: e.reason }));
         // The provider is down: keyword filters and static links still protect the user (§20.1).
         return fixed(failureTemplate(e.reason));
       }

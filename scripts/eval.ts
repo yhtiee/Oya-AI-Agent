@@ -93,7 +93,7 @@ async function label(
         output: Output.object({ schema: purpose === "safety_classifier" ? SafetyOutput : RouterOutput }),
         maxRetries: 0,
         temperature: 0,
-        maxOutputTokens: 600,
+        maxOutputTokens: 1500,
         abortSignal: AbortSignal.timeout(20_000),
         providerOptions: providerOptions(ref, { structured: true }),
       });

@@ -19,6 +19,17 @@ export default async function OpsLayout({ children }: LayoutProps<"/ops">) {
             <Link href="/ops" className="font-display text-2xl font-extrabold tracking-[-0.025em] text-orange">
               oya <span className="text-base text-body-on-dark">ops</span>
             </Link>
+            <nav aria-label="Ops" className="flex items-center gap-1">
+              <Link href="/ops" className="rounded-full px-3 py-1.5 text-sm font-bold text-cream hover:bg-forest-line">
+                Queue
+              </Link>
+              <Link
+                href="/ops/alerts"
+                className="rounded-full px-3 py-1.5 text-sm font-bold text-cream hover:bg-forest-line"
+              >
+                Alerts
+              </Link>
+            </nav>
             <p className="text-sm text-body-on-dark">
               {session.displayName} · {session.appRole} · {session.aal === "aal2" ? "2FA verified" : "2FA needed"}
             </p>

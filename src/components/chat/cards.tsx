@@ -7,6 +7,13 @@ import { formatNaira } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import { answerConfirmation } from "@/server/actions/chat";
 import type { Card, ConfirmCard, EmergencyCard, InfoCard, SupportCard } from "@/types/cards";
+import {
+  ClusterPickerCardView,
+  LocalAlertsCardView,
+  PowerStatusCardView,
+  ReminderCardView,
+  type Answer,
+} from "./m4-cards";
 
 /* Card views (SPEC §14.5, Appendix A). Every href comes from the server card; nothing here invents facts. */
 
@@ -135,7 +142,7 @@ export function InfoCardView({ card }: { card: InfoCard }) {
   );
 }
 
-export function ConfirmCardView({ card, onAnswered }: { card: ConfirmCard; onAnswered: (text: string) => void }) {
+export function ConfirmCardView({ card, onAnswered }: { card: ConfirmCard; onAnswered: Answer }) {
   const t = useTranslations("chat");
   const [state, setState] = useState<"open" | "done" | "expired">("open");
   const [pending, start] = useTransition();
@@ -145,7 +152,7 @@ export function ConfirmCardView({ card, onAnswered }: { card: ConfirmCard; onAns
       const r = await answerConfirmation({ confirmationId: card.confirmationId, decision });
       if (r.status === "ok") {
         setState(r.data.ok ? "done" : "expired");
-        onAnswered(r.data.text);
+        onAnswered(r.data.text, r.data.cards);
       } else if (r.status === "error") onAnswered(r.error);
     });
 
@@ -181,7 +188,7 @@ export function ConfirmCardView({ card, onAnswered }: { card: ConfirmCard; onAns
   );
 }
 
-export function CardView({ card, onAnswered }: { card: Card; onAnswered: (text: string) => void }) {
+export function CardView({ card, onAnswered }: { card: Card; onAnswered: Answer }) {
   switch (card.type) {
     case "emergency":
       return <EmergencyCardView card={card} />;
@@ -191,5 +198,13 @@ export function CardView({ card, onAnswered }: { card: Card; onAnswered: (text: 
       return <InfoCardView card={card} />;
     case "confirm":
       return <ConfirmCardView card={card} onAnswered={onAnswered} />;
+    case "power_status":
+      return <PowerStatusCardView card={card} onAnswered={onAnswered} />;
+    case "cluster_picker":
+      return <ClusterPickerCardView card={card} onAnswered={onAnswered} />;
+    case "local_alerts":
+      return <LocalAlertsCardView card={card} />;
+    case "reminder":
+      return <ReminderCardView card={card} onAnswered={onAnswered} />;
   }
 }

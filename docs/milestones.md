@@ -164,3 +164,45 @@ Progress against SPEC §21.4. Each milestone ends with tests green, migrations a
   eval results; CI refuses it without a passing report. Until then production replies in button mode; set
   `LLM_ALLOW_UNEVALUATED=true` in Vercel **preview** or local `.env` to try the chat.
 - Ask Pilot 0 ambassadors to write and record the real router and safety fixtures, and to review the emergency phrases.
+
+## M4 — Power & light, local alerts, reminders & watches, notifications
+
+**Status:** built, awaiting founder review (2026-10-18). Features are behind their flags, all **off** in the shared
+project until you turn them on (D-024).
+
+| Item                                                                                     | Where                                                               | Status                                |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------- |
+| `power` skill: status, one-tap reports, alerts, units estimate                           | `src/server/agent/skills/power.ts`, `src/server/power/service.ts`   | done                                  |
+| Power status card (Report ON/OFF, Alert me), cluster picker, few-reporters invite        | `src/components/chat/m4-cards.tsx`, `src/server/actions/power.ts`   | done                                  |
+| §5.1 status algorithm, trust, bootstrap rule (from M2) and server-side reports           | migrations `…_core_local_data.sql`, `…_m4_power_reports_alerts.sql` | done, tested                          |
+| `local_alerts` skill and card; alerts reach a cluster through its parent areas           | `skills/local-alerts.ts`, `src/server/alerts/service.ts`            | done                                  |
+| Ops alerts editor (source URL required, verified-by, audited)                            | `/ops/alerts`                                                       | done                                  |
+| Morning digest (07:00, push / in-app only, only on days with an alert)                   | `alerts_digest` job                                                 | done                                  |
+| Reminders: English + Pidgin time parsing, repeats, confirm shows the parsed time         | `src/lib/reminders/parse-time.ts`, `skills/reminders.ts`            | done                                  |
+| Reminder firing (tick queues due reminders; repeats move to the next occurrence), snooze | `reminder_fire` job, `enqueue_due_reminders`                        | done                                  |
+| Watches: fire once per confirmed change, quiet hours, overnight opt-in, 4 a day          | `watch_eval` job + trigger on `power_status_changes`                | done                                  |
+| Notifications: outbound queue with idempotency keys; web push (VAPID); in-app bell       | `src/server/notifications/*`, `NotificationBell`, `public/sw.js`    | done                                  |
+| SMS (Termii) and WhatsApp adapters                                                       | `src/server/notifications/channels.ts`                              | mock mode (D-025)                     |
+| Settings: power area, typical daily use, overnight alerts, digest, push on this device   | `/app/settings`                                                     | done                                  |
+| Golden conversations                                                                     | —                                                                   | **waiting on model capacity** (D-027) |
+
+### Acceptance (§21.4)
+
+- [x] Unit tests reproduce the §5.1 rules, including spoofing: 2 new accounts can't flip a watch; bootstrap needs a
+      trusted reporter; disagreement is "uncertain"; 6-hour staleness is "unknown"; trust moves +0.1 / −0.15
+      (`tests/integration/m4-power-reminders.test.ts`, live database).
+- [x] Watches fire once per confirmed change (replayed job sends nothing new), stay quiet overnight unless opted in,
+      and fire at most 4 times a day.
+- [x] Reminders fire within 1 minute: the tick queues due reminders and runs them in the same pass (tested); repeats
+      move on; cancelled ones stay quiet; important ones add an SMS (mock).
+- [ ] Golden conversations ≥ 85%: waiting on model capacity (D-027).
+
+### Founder steps
+
+- Add `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` (now in `.env`) to Vercel, and `VAPID_SUBJECT` (e.g.
+  `mailto:you@yourdomain`) if you want push services to have a contact.
+- Turn the M4 flags on when you're ready (ops console or SQL):
+  `update public.feature_flags set enabled = true where key in ('skill_power','local_alerts','reminders','watches');`
+  Locally, `FLAGS_FORCE_ON=skill_power,watches,reminders,local_alerts,skill_paperwork` in `.env` does the same.
+- Map and import Uyo's power clusters (`scripts/import-areas.ts`): the cluster picker and Settings show an empty state
+  until areas exist.

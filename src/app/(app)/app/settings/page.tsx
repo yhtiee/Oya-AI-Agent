@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { PowerSettings } from "@/components/settings/PowerSettings";
 import { PasswordForm, ProfileForm, SignOutOthers } from "@/components/settings/SettingsForms";
+import { parsePrefs } from "@/lib/prefs";
+import { listClusters } from "@/server/power/service";
 import { requireSession } from "@/server/auth/session";
 import { getServiceClient } from "@/server/db/service-client";
 import { getUserClient } from "@/server/db/user-client";
@@ -16,13 +19,21 @@ export default async function SettingsPage() {
 
   // Reads go through the user's own client, so RLS decides what comes back.
   const [{ data: profile }, { data: consents }, { data: sessions }] = await Promise.all([
-    db.from("profiles").select("display_name, language, timezone").eq("id", session.userId).single(),
+    db
+      .from("profiles")
+      .select("display_name, language, timezone, power_area_id, prefs")
+      .eq("id", session.userId)
+      .single(),
     db
       .from("consents")
       .select("purpose, granted, policy_version, created_at")
       .order("created_at", { ascending: false }),
     getServiceClient().rpc("auth_list_sessions", { p_user_id: session.userId }),
   ]);
+
+  const clusters = await listClusters(getServiceClient(), undefined, 300);
+  const prefs = parsePrefs(profile?.prefs);
+  const tp = await getTranslations("settingsPower");
 
   const latestConsents = new Map<string, { granted: boolean; policy_version: string; created_at: string }>();
   for (const c of consents ?? []) if (!latestConsents.has(c.purpose)) latestConsents.set(c.purpose, c);
@@ -45,6 +56,19 @@ export default async function SettingsPage() {
           name={profile?.display_name ?? session.displayName}
           language={profile?.language === "pcm" ? "pcm" : "en"}
           timezone={profile?.timezone ?? session.timezone}
+        />
+      </section>
+
+      <section aria-labelledby="power-title" className="rounded-card border border-hairline bg-paper p-6 sm:p-8">
+        <h2 id="power-title" className="t-h2 text-forest">
+          {tp("title")}
+        </h2>
+        <PowerSettings
+          clusters={clusters}
+          areaId={(profile?.power_area_id as string | null) ?? null}
+          overnightAlerts={prefs.power?.overnight_alerts ?? false}
+          alertsDigest={prefs.notifications?.alerts_digest ?? false}
+          kwhPerDay={prefs.power?.kwh_per_day ?? null}
         />
       </section>
 

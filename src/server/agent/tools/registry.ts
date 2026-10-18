@@ -3,7 +3,7 @@ import { tool, type ToolSet } from "ai";
 import { redact } from "@/lib/safety/redact";
 import type { ConfirmCard } from "@/types/cards";
 import { TOOLS_BY_NAME } from "./definitions";
-import type { AnyTool, ToolContext } from "./types";
+import { ToolInputError, type AnyTool, type ToolContext } from "./types";
 
 /*
  * Tool registry (SPEC §7.5, §7.6). Turns tool definitions into the model's tool set for one turn, and:
@@ -82,7 +82,8 @@ export function buildToolSet(names: readonly string[], ctx: ToolContext): ToolSe
         }
         try {
           if (def.confirmation) {
-            const card = await proposeConfirmation(def, parsed.data, ctx);
+            const prepared = def.confirmation.prepare ? await def.confirmation.prepare(parsed.data, ctx) : parsed.data;
+            const card = await proposeConfirmation(def, prepared, ctx);
             ctx.cards.push(card);
             await logToolCall(ctx, name, true, performance.now() - t0, parsed.data);
             return {
@@ -95,8 +96,9 @@ export function buildToolSet(names: readonly string[], ctx: ToolContext): ToolSe
           ctx.sources.add(output);
           await logToolCall(ctx, name, true, performance.now() - t0, parsed.data);
           return output;
-        } catch {
+        } catch (e) {
           await logToolCall(ctx, name, false, performance.now() - t0, parsed.data);
+          if (e instanceof ToolInputError) return { error: "needs_user_input", message: e.message };
           return { error: "tool_failed", message: "This didn't work. Say so plainly and offer to try again." };
         }
       },

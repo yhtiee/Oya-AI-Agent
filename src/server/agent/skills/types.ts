@@ -5,7 +5,7 @@ import type { SkillId } from "../router-schema";
 
 /* Skill definition (SPEC §7.4). Skills never call providers, payments or messaging directly; they call tools. */
 
-export type CardRule = { tool: string; card: "info" };
+export type CardRule = { tool: string; card: "info" | "power_status" | "cluster_picker" | "local_alerts" | "reminder" };
 
 export interface SkillDefinition<Slots = Record<string, unknown>> {
   id: SkillId;

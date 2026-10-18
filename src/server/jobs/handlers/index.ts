@@ -1,5 +1,6 @@
 import "server-only";
 import type { JobHandler, JobType } from "../types";
+import { alertsDigest, reminderFire, sendOutbound, watchEval } from "./notifications";
 import { powerStatusRecompute } from "./power";
 import { taskTimer } from "./task-timer";
 
@@ -10,4 +11,8 @@ import { taskTimer } from "./task-timer";
 export const HANDLERS: Partial<Record<JobType, JobHandler>> = {
   task_timer: taskTimer,
   power_status_recompute: powerStatusRecompute,
+  send_outbound: sendOutbound,
+  reminder_fire: reminderFire,
+  watch_eval: watchEval,
+  alerts_digest: alertsDigest,
 };

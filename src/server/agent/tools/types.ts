@@ -46,9 +46,19 @@ export type ToolDefinition<I extends z.ZodType = z.ZodType, O = unknown> = {
     kind: ConfirmationKind;
     consents?: ("share_contact" | "location")[];
     summarise: (input: z.infer<I>, ctx: ToolContext) => { title: string; lines: string[] };
+    /**
+     * Resolves the input before it is stored (e.g. "tomorrow 9am" into an exact time, the user's cluster into an id),
+     * so the confirmed action is exactly what the card showed. Throw ToolInputError to send the model a fixable message.
+     */
+    prepare?: (input: z.infer<I>, ctx: ToolContext) => Promise<z.infer<I>>;
   };
   handler: (input: z.infer<I>, ctx: ToolContext) => Promise<O>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyTool = ToolDefinition<any, any>;
+
+/** A problem with the model's arguments it can fix by asking the user (e.g. a time that couldn't be read). */
+export class ToolInputError extends Error {
+  override name = "ToolInputError";
+}

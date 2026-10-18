@@ -1,5 +1,7 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Card } from "@/types/cards";
+import { buildCards, CONFIRMED_CARD_RULES } from "./cards";
 import { GroundingSources } from "./grounding";
 import { template, type Lang } from "./templates";
 import { executeConfirmation } from "./tools/registry";
@@ -11,7 +13,8 @@ import type { ToolContext } from "./tools/types";
  * (or at all, for someone else's confirmation).
  */
 
-export type ConfirmOutcome = { ok: true; text: string; tool: string } | { ok: false; text: string };
+export type ConfirmOutcome =
+  { ok: true; text: string; tool: string; cards: Card[] } | { ok: false; text: string; cards?: Card[] };
 
 type Claimed = {
   id: string;
@@ -47,7 +50,8 @@ export async function confirmAndExecute(input: {
     cards: [],
   };
   const done = await executeConfirmation(claimed, ctx);
-  return { ok: true, text: template("confirmed", language), tool: done.tool };
+  const cards = buildCards(CONFIRMED_CARD_RULES, [{ tool: done.tool, output: done.output }], language);
+  return { ok: true, text: template("confirmed", language), tool: done.tool, cards };
 }
 
 export async function declineConfirmation(input: {
@@ -65,5 +69,5 @@ export async function declineConfirmation(input: {
     .select("id");
   if (error) throw new Error(`decline failed: ${error.message}`);
   if (!data?.length) return { ok: false, text: template("confirmationGone", input.language) };
-  return { ok: true, text: template("declined", input.language), tool: "decline" };
+  return { ok: true, text: template("declined", input.language), tool: "decline", cards: [] };
 }

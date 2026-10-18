@@ -74,8 +74,8 @@ export function Chat({
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
-  const appendAssistant = (text: string) =>
-    setMessages((m) => [...m, { id: crypto.randomUUID(), role: "assistant", text, cards: [] }]);
+  const appendAssistant = (text: string, cards: Card[] = []) =>
+    setMessages((m) => [...m, { id: crypto.randomUUID(), role: "assistant", text, cards }]);
 
   async function send(text: string) {
     const clean = text.trim();

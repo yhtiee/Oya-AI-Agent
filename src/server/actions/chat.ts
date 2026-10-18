@@ -31,8 +31,9 @@ export const answerConfirmation = authedAction(Input, async ({ confirmationId, d
       role: "assistant",
       channel: "web",
       text: result.text,
+      cards: result.cards ?? [],
       status: "sent",
     });
   }
-  return { ok: result.ok, text: result.text };
+  return { ok: result.ok, text: result.text, cards: result.cards ?? [] };
 });

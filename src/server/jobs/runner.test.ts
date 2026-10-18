@@ -109,9 +109,20 @@ describe("runTick", () => {
       "record_heartbeat",
       "reap_jobs",
       "llm_breaker_check",
-      "enqueue_job",
+      "enqueue_due_reminders",
     ]);
-    expect(calls.find((c) => c.fn === "enqueue_job")?.args.p_dedupe_key).toMatch(/^power_status_recompute:\d+$/);
+    const keys = calls.filter((c) => c.fn === "enqueue_job").map((c) => String(c.args.p_dedupe_key));
+    expect(keys.some((k) => /^power_status_recompute:\d+$/.test(k))).toBe(true);
+  });
+
+  it("queues the alerts digest once a day from 07:00 Lagos, not before", async () => {
+    const keysAt = async (iso: string) => {
+      const { client, calls } = fakeClient([]);
+      await runTick({ client, workerId: "w", handlers: {}, now: () => new Date(iso) });
+      return calls.filter((c) => c.fn === "enqueue_job").map((c) => String(c.args.p_dedupe_key));
+    };
+    expect(await keysAt("2026-10-18T06:30:00Z")).toContain("alerts_digest:2026-10-18"); // 07:30 in Lagos
+    expect((await keysAt("2026-10-18T04:30:00Z")).some((k) => k.startsWith("alerts_digest"))).toBe(false); // 05:30
   });
 
   it("stops claiming once the time budget is spent", async () => {

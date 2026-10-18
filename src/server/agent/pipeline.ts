@@ -6,6 +6,7 @@ import { matchEmergency } from "@/lib/safety/emergency";
 import { containsProtectedInfo, redact } from "@/lib/safety/redact";
 import type { Card } from "@/types/cards";
 import { getEnv } from "../env";
+import { isEnabled, type FlagKey } from "../flags";
 import { LlmUnavailableError, type LlmMeta } from "../integrations/llm";
 import { buildCards } from "./cards";
 import { confirmAndExecute, declineConfirmation } from "./confirmations";
@@ -225,7 +226,7 @@ export async function runWebTurn(input: TurnInput): Promise<void> {
         });
       } catch (e) {
         if (!(e instanceof LlmUnavailableError)) throw e;
-        console.log(`router failed: ${e.reason} (${e.message})`);
+        console.warn(JSON.stringify({ level: "warn", msg: "router unavailable", reason: e.reason }));
         // The provider is down: keyword filters and static links still protect the user (§20.1).
         return fixed(failureTemplate(e.reason));
       }
@@ -262,6 +263,7 @@ export async function runWebTurn(input: TurnInput): Promise<void> {
       const fn = routed.pendingConfirmationReply === "yes" ? confirmAndExecute : declineConfirmation;
       const r = await fn({ client, userId, confirmationId: ctx.pendingConfirmation.id, language: replyLang });
       say(r.text);
+      for (const c of r.cards ?? []) show(c);
       return finish();
     }
     if (
@@ -285,7 +287,8 @@ export async function runWebTurn(input: TurnInput): Promise<void> {
       return fixed("greeting");
     }
     const skill = SKILLS[routed.skill];
-    if (!skill) {
+    // A skill runs only when built and its flag is on (R12: flags fail closed).
+    if (!skill || !(await isEnabled(skill.flag as FlagKey, { userId }))) {
       await client
         .from("demand_signals")
         .insert({ user_id: userId, raw_intent: redacted.slice(0, 500), inferred_category: routed.skill });
@@ -312,12 +315,14 @@ export async function runWebTurn(input: TurnInput): Promise<void> {
         emitText: say,
         meta: { ...meta, taskId: routed.targetTaskId },
       });
-      for (const c of [...buildCards(skill.cardRules, tools.results), ...tools.cards]) show(c);
+      for (const c of [...buildCards(skill.cardRules, tools.results, replyLang), ...tools.cards]) show(c);
       if (!turn.text && !out.cards.length) say(template("failure", replyLang));
     } catch (e) {
       if (!(e instanceof LlmUnavailableError)) throw e;
       for (const c of tools.cards) show(c);
-      console.log(`skill ${routed.skill} failed: ${e.reason} (${e.message})`);
+      console.warn(
+        JSON.stringify({ level: "warn", msg: "skill model unavailable", skill: routed.skill, reason: e.reason }),
+      );
       if (!out.text.length) say(template(failureTemplate(e.reason), replyLang));
     }
     return finish();

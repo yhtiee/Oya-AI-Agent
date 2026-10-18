@@ -3,6 +3,38 @@
 Choices made where SPEC.md is silent, or where the founder chose differently from the spec (SPEC §0 rule 5).
 Newest first. Each entry: what, why, and how to revisit.
 
+## D-027 — Golden-conversation evals wait for model capacity (founder decision, M4, 2026-10-18)
+
+M4's quality bar includes golden conversations ≥ 85% for power, reminders and local alerts. Grading them needs a few
+hundred model calls per run, more than Groq's free tier allows in a day (D-019). The founder chose to leave the capacity
+question for later, so the golden fixtures and grader aren't built yet. Everything else in M4 is tested with scripted
+models (`tests/integration/m4-chat.test.ts`) and against the live database. **Revisit:** when capacity is decided.
+
+## D-026 — An in-app inbox alongside web push (founder decision, M4, 2026-10-18)
+
+Every notification is also an inbox entry (the bell in the app header), because web push alone is unreliable on the
+Android brands most Uyo users have (§4.3, SPEC risk N3). The `push` notification row doubles as the inbox entry; the
+bell polls once a minute while the app is open. Users read their own notifications through RLS; marking read goes
+through a server action.
+
+## D-025 — SMS and WhatsApp notifications in mock mode (founder decision, M4, 2026-10-18)
+
+The Termii SMS and WhatsApp template adapters are built and wired into the delivery order (§5.7), but run in mock mode
+(`INTEGRATIONS_MODE=mock`): rows are created and marked sent with a `mock-…` external id, nothing leaves the server.
+SMS needs the CAC certificate for a sender ID; WhatsApp needs Meta verification and approved templates (and its flag is
+GATED). The 3-SMS-per-user-per-day cap is enforced already. **Revisit:** set `INTEGRATIONS_MODE=live`, `TERMII_*` once
+the sender ID exists; turn on `whatsapp_user_notifications` once templates are approved.
+
+## D-024 — Features honour their flags; non-production can force flags on (M4, 2026-10-18)
+
+From M4 the pipeline runs a skill only if its flag is on (R12), and the power, watch and reminder taps check theirs.
+In the shared project `skill_power`, `skill_paperwork`, `local_alerts`, `reminders` and `watches` are **off**, so
+production behaves as before until the founder turns them on in the ops console or SQL. `FLAGS_FORCE_ON`
+(comma-separated, ignored in production) lets local development and tests use features without changing the shared
+database. Also in M4: a confirmed power change queues its `watch_eval` job from a database trigger, so every path that
+confirms a change (a report, ops, the 10-minute recompute) fires watches; reminders set for a time inside quiet hours
+still fire (the user chose that time), while watches and the digest stay quiet unless overnight alerts are on.
+
 ## D-023 — Eval fixtures are a team draft; a model grader isn't used yet (M3, 2026-10-15)
 
 The first 100 router utterances (48% Pidgin) and the 110-case safety suite in `evals/fixtures/` were written by the team,

@@ -1,6 +1,10 @@
 import "server-only";
 import type { Card, InfoCard } from "@/types/cards";
+import { buildAlertsCard, type AlertRow } from "../alerts/service";
+import { buildClusterPicker, buildPowerCard } from "../power/service";
+import { buildReminderCard, type ReminderRow } from "../reminders/service";
 import type { CardRule } from "./skills/types";
+import type { Lang } from "./templates";
 
 /*
  * Card builders (SPEC §7.2 step 8, Appendix A, R3). Cards come only from this turn's tool results, carry the
@@ -70,20 +74,49 @@ export function buildInfoCard(output: unknown, now = new Date()): InfoCard | nul
   };
 }
 
-export function buildCards(rules: CardRule[], results: { tool: string; output: unknown }[]): Card[] {
+/** One card from one tool result, by rule. Returns null when the result doesn't warrant a card. */
+function cardFor(rule: CardRule["card"], output: unknown, lang: Lang): Card | null {
+  const o = output as Record<string, unknown> | null;
+  if (!o || typeof o !== "object" || "error" in o) return null;
+  switch (rule) {
+    case "info":
+      return buildInfoCard(output);
+    case "power_status":
+      return o.needsCluster === false ? buildPowerCard(o as Parameters<typeof buildPowerCard>[0], lang) : null;
+    case "cluster_picker":
+      return o.needsCluster === true
+        ? buildClusterPicker((o.clusters as { id: string; name: string }[]) ?? [], lang)
+        : null;
+    case "local_alerts": {
+      const area = o.area as { name: string } | null;
+      return area ? buildAlertsCard(area.name, (o.alerts as AlertRow[]) ?? []) : null;
+    }
+    case "reminder":
+      return o.reminder ? buildReminderCard(o.reminder as ReminderRow) : null;
+  }
+}
+
+export function buildCards(rules: CardRule[], results: { tool: string; output: unknown }[], lang: Lang = "en"): Card[] {
   const cards: Card[] = [];
   const seen = new Set<string>();
   for (const r of results) {
     for (const rule of rules.filter((x) => x.tool === r.tool)) {
-      if (rule.card === "info") {
-        const card = buildInfoCard(r.output);
-        const key = card ? `info:${card.title}` : "";
-        if (card && !seen.has(key)) {
-          seen.add(key);
-          cards.push(card);
-        }
-      }
+      const card = cardFor(rule.card, r.output, lang);
+      if (!card) continue;
+      // One card per kind and subject per turn (a skill may call the same tool twice).
+      const key =
+        card.type === "info"
+          ? `info:${card.title}`
+          : card.type === "reminder"
+            ? `reminder:${card.reminderId}`
+            : card.type;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      cards.push(card);
     }
   }
   return cards;
 }
+
+/** Cards shown after a confirmed action runs (a ConfirmCard answered in chat or by tap). */
+export const CONFIRMED_CARD_RULES: CardRule[] = [{ tool: "create_reminder", card: "reminder" }];

@@ -1,6 +1,8 @@
 import "server-only";
 import { z } from "zod";
+import { mergePrefs, type Prefs } from "@/lib/prefs";
 import { verifiedResources } from "@/lib/safety/emergency-resources";
+import { M4_TOOLS } from "./m4";
 import type { AnyTool, ToolDefinition } from "./types";
 
 /*
@@ -9,7 +11,27 @@ import type { AnyTool, ToolDefinition } from "./types";
  * `source` and `asOf` (R3).
  */
 
-const PREFERENCE_KEYS = ["language", "budget_default_kobo", "notification_channel", "overnight_power_alerts"] as const;
+const PREFERENCE_KEYS = [
+  "language",
+  "budget_default_kobo",
+  "notification_channel",
+  "overnight_power_alerts",
+  "power_kwh_per_day",
+] as const;
+
+/** Where each preference lives in profiles.prefs (lib/prefs.ts). */
+function prefPatch(key: (typeof PREFERENCE_KEYS)[number], value: string): Partial<Prefs> {
+  switch (key) {
+    case "power_kwh_per_day":
+      return { power: { kwh_per_day: Number(value) } };
+    case "overnight_power_alerts":
+      return { power: { overnight_alerts: /^(true|yes|on|1)$/i.test(value) } };
+    case "language":
+      return { language: value === "pcm" ? "pcm" : "en" };
+    default:
+      return { [key]: value } as Partial<Prefs>;
+  }
+}
 
 function define<I extends z.ZodType, O>(def: ToolDefinition<I, O>): ToolDefinition<I, O> {
   return def;
@@ -131,7 +153,7 @@ export const recordPreference = define({
   },
   async handler({ key, value }, ctx) {
     const { data: profile } = await ctx.client.from("profiles").select("prefs").eq("id", ctx.userId).single();
-    const prefs = { ...((profile?.prefs as Record<string, unknown>) ?? {}), [key]: value };
+    const prefs = mergePrefs(profile?.prefs, prefPatch(key, value));
     const { error } = await ctx.client.from("profiles").update({ prefs }).eq("id", ctx.userId);
     if (error) throw new Error(error.message);
     return { saved: true, key, value, source: "Your Oya profile", asOf: new Date().toISOString() };
@@ -168,6 +190,7 @@ export const escalateToHuman = define({
 });
 
 export const ALL_TOOLS: AnyTool[] = [
+  ...M4_TOOLS,
   getUserContext,
   emergencyGuidance,
   listKbDocuments,

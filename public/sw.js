@@ -5,7 +5,7 @@
  *  - network-first for everything else; a failed page navigation falls back to the emergency page.
  * Personal pages (/app, /ops) and API responses are never cached.
  */
-const VERSION = "oya-v1";
+const VERSION = "oya-v2";
 const SHELL = ["/help/emergency", "/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
@@ -54,4 +54,38 @@ self.addEventListener("fetch", (event) => {
       fetch(req).catch(async () => (await caches.match("/help/emergency")) || Response.error()),
     );
   }
+});
+
+// Web push (SPEC §14.8, M4): the server sends {title, body, url, tag}; tapping opens or focuses Oya.
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: "Oya", body: event.data ? event.data.text() : "" };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || "Oya", {
+      body: data.body || "",
+      tag: data.tag || undefined,
+      icon: "/icon.svg",
+      badge: "/icon.svg",
+      data: { url: data.url || "/app" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = new URL((event.notification.data && event.notification.data.url) || "/app", self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      const open = clients.find((c) => c.url.startsWith(self.location.origin));
+      if (open) {
+        open.navigate(url);
+        return open.focus();
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
 });

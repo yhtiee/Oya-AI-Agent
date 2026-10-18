@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { LOCALE_COOKIE } from "@/i18n/config";
+import { mergePrefs } from "@/lib/prefs";
 import { isValidTimeZone } from "@/lib/time";
 import { decrypt, encrypt, parseEncryptionKey } from "../crypto";
 import { hashPassword, passwordProblem, PASSWORD_MAX, verifyPassword } from "../auth/password";
@@ -127,4 +128,37 @@ export const verifyMfaCode = authedFormAction(codeSchema, async (input, { sessio
   if (!accepted) throw new ActionError("That code was already used. Wait for the next one.", { code: "Already used." });
   revalidatePath("/ops", "layout");
   return undefined;
+});
+
+const powerPrefsSchema = z.object({
+  areaId: z.string().uuid().nullable(),
+  overnightAlerts: z.boolean(),
+  alertsDigest: z.boolean(),
+  kwhPerDay: z.number().positive().max(200).nullable(),
+});
+
+/** Power & alerts settings (SPEC §5.1, §5.6, §5.7): cluster, overnight alerts, digest, typical daily use. */
+export const updatePowerPrefs = authedAction(powerPrefsSchema, async (input, { session }) => {
+  const client = getServiceClient();
+  const { data: profile } = await client.from("profiles").select("prefs").eq("id", session.userId).single();
+  const prefs = mergePrefs(profile?.prefs, {
+    power: { overnight_alerts: input.overnightAlerts, ...(input.kwhPerDay ? { kwh_per_day: input.kwhPerDay } : {}) },
+    notifications: { alerts_digest: input.alertsDigest },
+  });
+  if (input.areaId) {
+    const { data: area } = await client.from("areas").select("kind, active").eq("id", input.areaId).maybeSingle();
+    if (!area || area.kind !== "power_cluster" || !area.active) throw new ActionError("That area isn't available.");
+  }
+  const { error } = await client
+    .from("profiles")
+    .update({ prefs, power_area_id: input.areaId })
+    .eq("id", session.userId);
+  if (error) throw new Error(error.message);
+  await audit({
+    actorId: session.userId,
+    action: "power_settings_updated",
+    entity: "profile",
+    entityId: session.userId,
+  });
+  return { saved: true };
 });

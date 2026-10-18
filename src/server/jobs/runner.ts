@@ -39,6 +39,16 @@ export async function runTick(opts: TickOptions): Promise<TickReport> {
 
   await client.rpc("llm_breaker_check");
 
+  // Reminders due in the next 90 seconds get a reminder_fire job each (once per occurrence).
+  await client.rpc("enqueue_due_reminders", { p_horizon_s: 90 });
+
+  // The local-alerts digest once a day from 07:00 Lagos (SPEC §5.6).
+  const lagos = new Date(now().getTime() + 3_600_000);
+  if (lagos.getUTCHours() >= 7) {
+    const day = lagos.toISOString().slice(0, 10);
+    await enqueueJob("alerts_digest", { day }, { dedupeKey: `alerts_digest:${day}`, client });
+  }
+
   // Power status every 10 minutes: one job per 10-minute bucket, whichever tick gets there first.
   const bucket = Math.floor(now().getTime() / TEN_MINUTES);
   await enqueueJob("power_status_recompute", {}, { dedupeKey: `power_status_recompute:${bucket}`, client });

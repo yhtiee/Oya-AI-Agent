@@ -61,7 +61,7 @@ export async function classifySafety(text: string, meta: LlmMeta): Promise<Safet
       schema: SafetyOutput,
       system: loadPrompt("safety"),
       messages: [{ role: "user", content: text }],
-      maxOutputTokens: 200,
+      maxOutputTokens: 800,
     },
     meta,
   );

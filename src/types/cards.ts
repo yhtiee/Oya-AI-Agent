@@ -83,6 +83,71 @@ export const SupportCard = z.object({
 });
 export type SupportCard = z.infer<typeof SupportCard>;
 
-export const Card = z.discriminatedUnion("type", [ConfirmCard, InfoCard, EmergencyCard, SupportCard]);
+/** Power in the user's cluster (SPEC §5.1). Actions are taps handled by server actions, no model. */
+export const PowerStatusCard = z.object({
+  type: z.literal("power_status"),
+  id: z.string().uuid(),
+  areaId: z.string().uuid(),
+  areaName: z.string(),
+  status: z.enum(["on", "off", "uncertain", "unknown"]),
+  confidenceText: z.string(),
+  lastChangeAt: z.string().datetime({ offset: true }).nullable(),
+  reportersCount: z.number().int(),
+  /** Fewer than 3 active reporters in the last 7 days: say so and invite reports. */
+  fewReporters: z.boolean(),
+  source: Source,
+});
+export type PowerStatusCard = z.infer<typeof PowerStatusCard>;
+
+export const ClusterPickerCard = z.object({
+  type: z.literal("cluster_picker"),
+  id: z.string().uuid(),
+  clusters: z.array(z.object({ id: z.string().uuid(), name: z.string() })).max(12),
+  note: z.string(),
+});
+export type ClusterPickerCard = z.infer<typeof ClusterPickerCard>;
+
+export const LocalAlertsCard = z.object({
+  type: z.literal("local_alerts"),
+  id: z.string().uuid(),
+  areaName: z.string(),
+  alerts: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        title: z.string(),
+        body: z.string(),
+        severity: z.enum(["info", "warning", "severe"]),
+        startsAt: z.string().datetime({ offset: true }),
+        endsAt: z.string().datetime({ offset: true }).nullable(),
+        sourceUrl: z.string().url(),
+      }),
+    )
+    .max(5),
+  source: Source,
+});
+export type LocalAlertsCard = z.infer<typeof LocalAlertsCard>;
+
+export const ReminderCard = z.object({
+  type: z.literal("reminder"),
+  id: z.string().uuid(),
+  reminderId: z.string().uuid(),
+  title: z.string(),
+  whenText: z.string(),
+  repeatText: z.string().nullable(),
+  status: z.enum(["scheduled", "sent", "cancelled", "failed"]),
+});
+export type ReminderCard = z.infer<typeof ReminderCard>;
+
+export const Card = z.discriminatedUnion("type", [
+  ConfirmCard,
+  InfoCard,
+  EmergencyCard,
+  SupportCard,
+  PowerStatusCard,
+  ClusterPickerCard,
+  LocalAlertsCard,
+  ReminderCard,
+]);
 export type Card = z.infer<typeof Card>;
 export type CardType = Card["type"];

@@ -19,6 +19,7 @@ export const JOB_TYPES = [
   "llm_breaker_check",
   "deferred_message",
   "backup_dump",
+  "alerts_digest",
 ] as const;
 
 export type JobType = (typeof JOB_TYPES)[number];

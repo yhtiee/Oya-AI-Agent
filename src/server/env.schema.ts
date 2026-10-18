@@ -51,6 +51,10 @@ export const envSchema = z
     GROQ_API_KEY: optionalString,
     /** Non-production only: lets purposes run before their eval report exists (D-019). */
     LLM_ALLOW_UNEVALUATED: bool,
+    /** Non-production only: comma-separated feature flags to treat as on (local dev and tests). */
+    FLAGS_FORCE_ON: optionalString,
+    /** Contact for web push (VAPID subject): mailto: or https: URL. */
+    VAPID_SUBJECT: optionalString,
     ANTHROPIC_API_KEY: optionalString,
     LLM_ROUTER_MODEL: optionalString,
     LLM_SIMPLE_MODEL: optionalString,

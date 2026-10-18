@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 process.env.LLM_ALLOW_UNEVALUATED = "true";
+process.env.FLAGS_FORCE_ON = "skill_paperwork";
 
 import { runWebTurn, type TurnEvent } from "@/server/agent/pipeline";
 import type { RouterOutput } from "@/server/agent/router-schema";

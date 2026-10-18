@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 // Purposes are disabled until their evals pass; the scripted mock models stand in here.
 process.env.LLM_ALLOW_UNEVALUATED = "true";
+process.env.FLAGS_FORCE_ON = "skill_paperwork";
 
 import { confirmAndExecute, declineConfirmation } from "@/server/agent/confirmations";
 import { runWebTurn, type TurnEvent } from "@/server/agent/pipeline";

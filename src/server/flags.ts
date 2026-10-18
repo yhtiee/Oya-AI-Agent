@@ -76,6 +76,14 @@ export async function isEnabled(key: FlagKey, ctx: Omit<FlagContext, "env"> = {}
   const env = getEnv();
   // BOOTSTRAP_MODE mirrors the flag for boot-time config (SPEC §21.3).
   if (key === "bootstrap_mode" && env.BOOTSTRAP_MODE !== undefined) return env.BOOTSTRAP_MODE;
+  // Local dev and tests can force flags on without touching the shared database (never in production).
+  if (
+    env.APP_ENV !== "production" &&
+    env.FLAGS_FORCE_ON?.split(",")
+      .map((k) => k.trim())
+      .includes(key)
+  )
+    return true;
   const rows = await loadFlags();
   return evaluateFlag(rows.get(key), { ...ctx, env: env.APP_ENV });
 }
